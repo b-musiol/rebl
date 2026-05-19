@@ -8,3 +8,13 @@
  */
 
 #include "../include/Core.hpp"
+
+using namespace REBL;
+
+RBD::Core::Core()
+{
+}
+
+RBD::Core::~Core()
+{
+}

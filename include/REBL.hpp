@@ -10,6 +10,8 @@
 #ifndef _REBL_HPP
 #define _REBL_HPP
 
+#include <memory>
+
 namespace REBL
 {
 
@@ -20,15 +22,10 @@ class RBD
     ~RBD();
 
   private:
+    /// PIMPL
+    struct Core;
+    std::unique_ptr<Core> core;
 };
-
-RBD::RBD()
-{
-}
-
-RBD::~RBD()
-{
-}
 
 } // namespace REBL
 

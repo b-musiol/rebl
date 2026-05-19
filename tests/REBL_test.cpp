@@ -14,7 +14,6 @@
 #include <graaflib/graph.h>
 #include <gtest/gtest.h>
 
-
 TEST(REBL, graaf_dependency)
 {
     graaf::directed_graph<const char, int> g;

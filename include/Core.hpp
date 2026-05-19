@@ -10,4 +10,14 @@
 #ifndef _REBL_CORE_HPP
 #define _REBL_CORE_HPP
 
+#include "../include/REBL.hpp"
+
+using namespace REBL;
+
+struct RBD::Core
+{
+    Core();
+    ~Core();
+};
+
 #endif // _REBL_CORE_HPP

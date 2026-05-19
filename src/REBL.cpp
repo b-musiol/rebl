@@ -6,3 +6,13 @@
  * See LICENSE
  */
 #include "../include/REBL.hpp"
+
+using namespace REBL;
+
+RBD::RBD()
+{
+}
+
+RBD::~RBD()
+{
+}
