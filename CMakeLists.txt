@@ -26,6 +26,17 @@ target_include_directories(REBL PUBLIC
 )
 
 FetchContent_Declare(
+  ticket
+  GIT_REPOSITORY https://github.com/b-musiol/ticket.git
+  GIT_TAG        main  # Adjust to version you'd like
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(ticket)
+target_include_directories(REBL PUBLIC
+    ${ticket_SOURCE_DIR}/include/
+)
+
+FetchContent_Declare(
   litesaver
   GIT_REPOSITORY https://github.com/b-musiol/litesaver.git
   GIT_TAG        main  # Adjust to version you'd like
