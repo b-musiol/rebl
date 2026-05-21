@@ -8,10 +8,13 @@
  */
 
 #include "../include/Core.hpp"
+#include <memory>
 
 using namespace REBL;
 
 RBD::Core::Core()
+    : rbd(std::make_unique<
+          KnoKan::DirectedGraph<std::string, ComponentData, EmptyP>>())
 {
 }
 

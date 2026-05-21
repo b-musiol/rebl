@@ -10,12 +10,21 @@
 #ifndef _REBL_CORE_HPP
 #define _REBL_CORE_HPP
 
-#include "../include/REBL.hpp"
+#define KNOKAN_DIRECTED_GRAPH
+#define KNOKAN_ALGORITHM_DFS
+
+#include "ComponentData.hpp"
+#include "REBL.hpp"
+#include <KnoKan.hpp>
+#include <string>
 
 using namespace REBL;
 
 struct RBD::Core
 {
+    std::unique_ptr<KnoKan::DirectedGraph<std::string, ComponentData, EmptyP>>
+        rbd;
+
     Core();
     ~Core();
 };
