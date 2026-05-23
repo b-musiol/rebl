@@ -49,16 +49,16 @@ target_include_directories(REBL PUBLIC
 target_link_libraries(REBL PUBLIC litesaver)
 
 FetchContent_Declare(
-  Kochs
+  kochs
   GIT_REPOSITORY https://github.com/b-musiol/kochs.git
   GIT_TAG        main  # Adjust to version you'd like
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
-FetchContent_MakeAvailable(Kochs)
+FetchContent_MakeAvailable(kochs)
 target_include_directories(REBL PUBLIC
     ${kochs_SOURCE_DIR}/include/
 )
-target_link_libraries(REBL PUBLIC Kochs)
+target_link_libraries(REBL PUBLIC kochs)
 
 FetchContent_Declare(
   googletest
