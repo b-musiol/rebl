@@ -8,11 +8,10 @@
 #include "../include/REBL.hpp"
 #include "../include/Core.hpp"
 
-
 using namespace REBL;
 
-RBD::RBD():
-core(std::make_unique<Core>())
+RBD::RBD(const std::string_view rbd_db_path)
+    : core(std::make_unique<Core>(rbd_db_path))
 {
 }
 

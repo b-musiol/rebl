@@ -12,9 +12,10 @@
 
 using namespace REBL;
 
-RBD::Core::Core()
+RBD::Core::Core(const std::string_view rbd_db_path)
     : rbd(std::make_unique<
-          KnoKan::DirectedGraph<std::string, ComponentData, EmptyP>>())
+          KnoKan::DirectedGraph<std::string, ComponentData, EmptyP>>()),
+      rbd_db_path(rbd_db_path), rbd_db(rbd_db_path)
 {
 }
 

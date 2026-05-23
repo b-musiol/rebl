@@ -11,6 +11,7 @@
 #define _REBL_HPP
 
 #include <memory>
+#include <string_view>
 
 namespace REBL
 {
@@ -18,7 +19,7 @@ namespace REBL
 class RBD
 {
   public:
-    RBD();
+    RBD(const std::string_view rbd_db_path);
     ~RBD();
 
   private:

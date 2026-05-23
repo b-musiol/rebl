@@ -16,6 +16,7 @@
 #include "ComponentData.hpp"
 #include "REBL.hpp"
 #include <KnoKan.hpp>
+#include <Litesaver.hpp>
 #include <string>
 
 using namespace REBL;
@@ -25,7 +26,10 @@ struct RBD::Core
     std::unique_ptr<KnoKan::DirectedGraph<std::string, ComponentData, EmptyP>>
         rbd;
 
-    Core();
+    std::string rbd_db_path;
+    Litesaver::Base rbd_db;
+
+    Core(const std::string_view rbd_db_path);
     ~Core();
 };
 

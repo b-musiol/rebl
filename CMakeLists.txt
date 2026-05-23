@@ -6,6 +6,7 @@ add_library(REBL
   src/REBL.cpp
   src/Core.cpp
   src/ComponentData.cpp
+  src/RBD_DB.cpp
 )
 target_compile_features(REBL PUBLIC cxx_std_20)
 
@@ -59,6 +60,20 @@ target_include_directories(REBL PUBLIC
     ${kochs_SOURCE_DIR}/include/
 )
 target_link_libraries(REBL PUBLIC kochs)
+
+set(JSON_BuildTests OFF)
+
+FetchContent_Declare(
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG        v3.12.0  # Adjust to version you'd like
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(json)
+target_link_libraries(REBL PRIVATE nlohmann_json::nlohmann_json)
+target_include_directories(REBL PUBLIC
+    ${json_SOURCE_DIR}/include/
+)
 
 FetchContent_Declare(
   googletest
