@@ -58,7 +58,19 @@ TEST(REBL, read_rbd_db)
     EXPECT_EQ(rbd.at(3).at(1).at(4).at(1).at(7), "MGCC->ACC_(m_p,p)");
     EXPECT_EQ(rbd.at(3).at(1).at(4).at(1).at(8), "ACC_(m_p,p)->Actor_(m_p,p)");
     EXPECT_EQ(rbd.at(3).at(1).at(4).at(1).at(9), "Actor_(m_p,p)");
-    // auto components = rbd_db.get_components();
+    auto components = rbd_db.get_rbd_components();
+    EXPECT_FLOAT_EQ(components.at("Actor_(m_p,p)").H(), 0.021);
+    EXPECT_FLOAT_EQ(components.at("Actor_(m_p,p)").T(), 0.0001632345);
+    EXPECT_FLOAT_EQ(components.at("Sensor_1").H(), 0.1);
+    EXPECT_FLOAT_EQ(components.at("Sensor_1").T(), 0.00057074999999999997);
+    EXPECT_FLOAT_EQ(components.at("MGCC").H(), 0.0);
+    EXPECT_FLOAT_EQ(components.at("MGCC").T(), 0.0);
+    EXPECT_FLOAT_EQ(components.at("Sensor_1->Actor_(1,1)").H(),
+                    4.8799999999999999);
+    EXPECT_FLOAT_EQ(components.at("Sensor_1->Actor_(1,1)").T(),
+                    0.0079904999999999993);
+    EXPECT_FLOAT_EQ(components.at("SCC_n->MGCC").H(), 0.022000000000000002);
+    EXPECT_FLOAT_EQ(components.at("SCC_n->MGCC").T(), 0.013698);
 }
 
 #endif // _REBL_TEST_HPP

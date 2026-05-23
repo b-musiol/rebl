@@ -33,6 +33,9 @@ class Connection : public Litesaver::Base
      * Gets the rbd JSON from the database.
      */
     nlohmann::json get_rbd();
+    /**
+     * Gets the rbd components as a map of explicit reliability data.
+     */
     std::unordered_map<std::string, Kochs::Object> get_rbd_components();
 };
 
