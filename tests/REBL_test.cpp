@@ -11,7 +11,13 @@
 #define _REBL_TEST_HPP
 
 #include "../include/RBD_DB.hpp"
+#include "../include/REBL.hpp"
 #include <gtest/gtest.h>
+
+#include <algorithm>
+#include <sstream>
+#include <string>
+#include <vector>
 
 TEST(REBL, read_rbd_db)
 {
@@ -71,6 +77,103 @@ TEST(REBL, read_rbd_db)
                     0.0079904999999999993);
     EXPECT_FLOAT_EQ(components.at("SCC_n->MGCC").H(), 0.022000000000000002);
     EXPECT_FLOAT_EQ(components.at("SCC_n->MGCC").T(), 0.013698);
+}
+
+std::string sort_lines_helper(std::string input)
+{
+    // This helper function is AI generated. It is not part of the actual codebase.
+    std::istringstream iss(input);
+    std::vector<std::string> lines;
+    std::string line;
+
+    while (std::getline(iss, line))
+    {
+        lines.push_back(line);
+    }
+
+    std::sort(lines.begin(), lines.end());
+
+    std::ostringstream oss;
+    for (size_t i = 0; i < lines.size(); ++i)
+    {
+        if (i != 0)
+            oss << '\n';
+        oss << lines[i];
+    }
+
+    return oss.str();
+}
+
+TEST(REBL, parse_rbd_db)
+{
+    // This parses in the constructor.
+    REBL::RBD rebl("../tests/rbd.db");
+    auto graph                  = rebl.get_pure_graph();
+    auto graph_adjacency_string = rebl.get_graph_adjacency_string(true, true);
+    std::string expected_graph_adjacency_string =
+        R"(61 (Actor_(m_p,p)) -> [ 43 (§virtual§)] (H: 0.021; T: 0.000163234; P: 3.42792e-06)
+60 (ACC_(m_p,p)->Actor_(m_p,p)) -> [ 61 (Actor_(m_p,p))] (H: 0.022; T: 0.013698; P: 0.000301356)
+28 (§virtual§) -> [ 30 (Sensor_1), 34 (Sensor_n)] (H: 0; T: 0; P: 0)
+29 (§virtual§) -> [ 38 (Actor_(1,2)->MGCC)] (H: 0; T: 0; P: 0)
+27 (Actor_(1,1)) -> [ 9 (§virtual§)] (H: 0.021; T: 0.000163234; P: 3.42792e-06)
+26 (Sensor_n->Actor_(m_1,1)) -> [ 22 (§virtual§)] (H: 0.022; T: 0.013698; P: 0.000301356)
+25 (Sensor_n) -> [ 26 (Sensor_n->Actor_(m_1,1))] (H: 0.001; T: 0.0004566; P: 4.566e-07)
+24 (Sensor_1->Actor_(m_1,1)) -> [ 22 (§virtual§)] (H: 0.022; T: 0.013698; P: 0.000301356)
+23 (Sensor_1) -> [ 24 (Sensor_1->Actor_(m_1,1))] (H: 0.1; T: 0.00057075; P: 5.7075e-05)
+21 (§virtual§) -> [ 23 (Sensor_1), 25 (Sensor_n)] (H: 0; T: 0; P: 0)
+22 (§virtual§) -> [ 20 (§virtual§)] (H: 0; T: 0; P: 0)
+19 (§virtual§) -> [ 21 (§virtual§)] (H: 0; T: 0; P: 0)
+20 (§virtual§) -> [ 27 (Actor_(1,1))] (H: 0; T: 0; P: 0)
+18 (§virtual§) -> [ 19 (§virtual§)] (H: 0; T: 0; P: 0)
+17 (Sensor_n->Actor_(1,1)) -> [ 13 (§virtual§)] (H: 0.022; T: 0.013698; P: 0.000301356)
+16 (Sensor_n) -> [ 17 (Sensor_n->Actor_(1,1))] (H: 0.001; T: 0.0004566; P: 4.566e-07)
+15 (Sensor_1->Actor_(1,1)) -> [ 13 (§virtual§)] (H: 4.88; T: 0.0079905; P: 0.0389936)
+14 (Sensor_1) -> [ 15 (Sensor_1->Actor_(1,1))] (H: 0.1; T: 0.00057075; P: 5.7075e-05)
+1 (§virtual§) -> [ 3 (MGCC)] (H: 0; T: 0; P: 0)
+2 (§virtual§) -> [ ] (H: 0; T: 0; P: 0)
+3 (MGCC) -> [ 4 (Actor_(1,1)->MGCC)] (H: 0; T: 0; P: 0)
+4 (Actor_(1,1)->MGCC) -> [ 5 (Actor_(m_1,1)->MGCC)] (H: 0.022; T: 0.013698; P: 0.000301356)
+5 (Actor_(m_1,1)->MGCC) -> [ 6 (§virtual§)] (H: 0; T: 0; P: 0)
+7 (§virtual§) -> [ 2 (§virtual§)] (H: 0; T: 0; P: 0)
+6 (§virtual§) -> [ 8 (§virtual§)] (H: 0; T: 0; P: 0)
+9 (§virtual§) -> [ 7 (§virtual§)] (H: 0; T: 0; P: 0)
+8 (§virtual§) -> [ 10 (§virtual§), 28 (§virtual§)] (H: 0; T: 0; P: 0)
+11 (§virtual§) -> [ 18 (§virtual§)] (H: 0; T: 0; P: 0)
+10 (§virtual§) -> [ 12 (§virtual§)] (H: 0; T: 0; P: 0)
+13 (§virtual§) -> [ 11 (§virtual§)] (H: 0; T: 0; P: 0)
+12 (§virtual§) -> [ 14 (Sensor_1), 16 (Sensor_n)] (H: 0; T: 0; P: 0)
+30 (Sensor_1) -> [ 31 (Sensor_1->SCC_1)] (H: 0.1; T: 0.00057075; P: 5.7075e-05)
+31 (Sensor_1->SCC_1) -> [ 32 (SCC_1)] (H: 0.022; T: 0.013698; P: 0.000301356)
+32 (SCC_1) -> [ 33 (SCC_1->MGCC)] (H: 0; T: 0; P: 0)
+33 (SCC_1->MGCC) -> [ 29 (§virtual§)] (H: 0.022; T: 0.013698; P: 0.000301356)
+34 (Sensor_n) -> [ 35 (Sensor_n->SCC_n)] (H: 0.001; T: 0.0004566; P: 4.566e-07)
+35 (Sensor_n->SCC_n) -> [ 36 (SCC_n)] (H: 0.022; T: 0.013698; P: 0.000301356)
+36 (SCC_n) -> [ 37 (SCC_n->MGCC)] (H: 0; T: 0; P: 0)
+37 (SCC_n->MGCC) -> [ 29 (§virtual§)] (H: 0.022; T: 0.013698; P: 0.000301356)
+38 (Actor_(1,2)->MGCC) -> [ 39 (Actor_(m_1,2)->MGCC)] (H: 0.022; T: 0.013698; P: 0.000301356)
+39 (Actor_(m_1,2)->MGCC) -> [ 40 (§virtual§)] (H: 0.022; T: 0.013698; P: 0.000301356)
+41 (§virtual§) -> [ 9 (§virtual§)] (H: 0; T: 0; P: 0)
+40 (§virtual§) -> [ 42 (§virtual§)] (H: 0; T: 0; P: 0)
+43 (§virtual§) -> [ 41 (§virtual§)] (H: 0; T: 0; P: 0)
+42 (§virtual§) -> [ 44 (ACC_(1,2)), 52 (Actor_(1,p)->MGCC)] (H: 0; T: 0; P: 0)
+44 (ACC_(1,2)) -> [ 45 (MGCC->ACC_(1,2))] (H: 0; T: 0; P: 0)
+45 (MGCC->ACC_(1,2)) -> [ 46 (ACC_(1,2)->Actor_(1,2))] (H: 0.022; T: 0.013698; P: 0.000301356)
+46 (ACC_(1,2)->Actor_(1,2)) -> [ 47 (Actor_(1,2))] (H: 0.022; T: 0.013698; P: 0.000301356)
+47 (Actor_(1,2)) -> [ 48 (ACC_(m_2,2))] (H: 0.021; T: 0.000163234; P: 3.42792e-06)
+48 (ACC_(m_2,2)) -> [ 49 (MGCC->ACC_(m_2,2))] (H: 0; T: 0; P: 0)
+49 (MGCC->ACC_(m_2,2)) -> [ 50 (ACC_(m_2,2)->Actor_(m_2,2))] (H: 0; T: 0; P: 0)
+50 (ACC_(m_2,2)->Actor_(m_2,2)) -> [ 51 (Actor_(m_2,2))] (H: 0.022; T: 0.013698; P: 0.000301356)
+51 (Actor_(m_2,2)) -> [ 43 (§virtual§)] (H: 0.021; T: 0.000163234; P: 3.42792e-06)
+52 (Actor_(1,p)->MGCC) -> [ 53 (Actor_(m_p,p)->MGCC)] (H: 0.022; T: 0.013698; P: 0.000301356)
+53 (Actor_(m_p,p)->MGCC) -> [ 54 (ACC_(1,p))] (H: 0.022; T: 0.013698; P: 0.000301356)
+54 (ACC_(1,p)) -> [ 55 (MGCC->ACC_(1,p))] (H: 0; T: 0; P: 0)
+55 (MGCC->ACC_(1,p)) -> [ 56 (ACC_(1,p)->Actor_(1,p))] (H: 0.022; T: 0.013698; P: 0.000301356)
+56 (ACC_(1,p)->Actor_(1,p)) -> [ 57 (Actor_(1,p))] (H: 0.022; T: 0.013698; P: 0.000301356)
+57 (Actor_(1,p)) -> [ 58 (ACC_(m_p,p))] (H: 0.021; T: 0.000163234; P: 3.42792e-06)
+58 (ACC_(m_p,p)) -> [ 59 (MGCC->ACC_(m_p,p))] (H: 0; T: 0; P: 0)
+59 (MGCC->ACC_(m_p,p)) -> [ 60 (ACC_(m_p,p)->Actor_(m_p,p))] (H: 0.022; T: 0.013698; P: 0.000301356))";
+    EXPECT_EQ(sort_lines_helper(graph_adjacency_string),
+              sort_lines_helper(expected_graph_adjacency_string));
 }
 
 #endif // _REBL_TEST_HPP

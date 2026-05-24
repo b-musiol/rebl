@@ -24,6 +24,8 @@ namespace REBL
 class ComponentData : public KnoKan::Property::Base
 {
     Kochs::Object rel_data;
+
+  public:
     ComponentData();
     ComponentData(double H, double T);
     ComponentData(const Kochs::Object &rel_data);

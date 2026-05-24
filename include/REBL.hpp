@@ -10,6 +10,10 @@
 #ifndef _REBL_HPP
 #define _REBL_HPP
 
+#define KNOKAN_DIRECTED_GRAPH
+
+#include "ComponentData.hpp"
+#include <KnoKan.hpp>
 #include <memory>
 #include <string_view>
 
@@ -21,6 +25,25 @@ class RBD
   public:
     RBD(const std::string_view rbd_db_path);
     ~RBD();
+
+  public:
+    /**
+     * Gets a copy of the underlying directed graph.
+     */
+    KnoKan::DirectedGraph<int,
+                          ComponentData,
+                          KnoKan::Property::Predefined::NoWeight>
+    get_pure_graph();
+    /**
+     * Gets the string that describes the underlying graph. At its base, it just
+     * shows the adjacency list with the IDs. `with_rel_data` also adds a
+     * reliability data (H/T/P) string after each node). `with_component_names`
+     * adds the names of the components with the ids for maximum verbosity. This
+     * is only useful for debugging, although all graph data can be exported
+     * that way.
+     */
+    std::string get_graph_adjacency_string(bool with_rel_data,
+                                           bool with_component_names);
 
   private:
     /// PIMPL
