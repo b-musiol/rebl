@@ -11,8 +11,8 @@
 
 using namespace REBL;
 
-RBD::RBD(const std::string_view rbd_db_path)
-    : core(std::make_unique<Core>(rbd_db_path))
+RBD::RBD(const std::string_view rbd_db_path, const MCSSettings &mcs_settings)
+    : core(std::make_unique<Core>(rbd_db_path, mcs_settings))
 {
     core->parse_rbd();
 }

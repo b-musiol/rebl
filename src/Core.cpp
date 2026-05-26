@@ -13,8 +13,12 @@
 
 using namespace REBL;
 
-RBD::Core::Core(const std::string_view rbd_db_path)
-    : rbd_db_path(rbd_db_path), rbd_db(rbd_db_path), id_dropper(1)
+RBD::Core::Core(const std::string_view rbd_db_path,
+                const MCSSettings &mcs_settings)
+    : rbd(std::make_unique<
+          KnoKan::DirectedGraph<int, ComponentData, EmptyP>>()),
+      rbd_db_path(rbd_db_path), rbd_db(rbd_db_path), id_dropper(1),
+      fc_machine(component_instance_map, mcs_settings, *rbd)
 {
 }
 
@@ -29,7 +33,7 @@ void RBD::Core::parse_rbd()
     auto rbd_components = rbd_db.get_rbd_components();
 
     // Reset the inner graph.
-    rbd = std::make_unique<KnoKan::DirectedGraph<int, ComponentData, EmptyP>>();
+    rbd->clear();
 
     // Define the outer start and end point
     start_point_id = id_dropper.pull();

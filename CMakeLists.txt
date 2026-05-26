@@ -7,6 +7,7 @@ add_library(REBL
   src/Core.cpp
   src/ComponentData.cpp
   src/RBD_DB.cpp
+  src/FC.cpp
 )
 target_compile_features(REBL PUBLIC cxx_std_20)
 

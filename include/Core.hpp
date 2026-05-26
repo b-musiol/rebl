@@ -10,17 +10,20 @@
 #ifndef _REBL_CORE_HPP
 #define _REBL_CORE_HPP
 
-#include <unordered_map>
+#include "MCSSettings.hpp"
+#include <map>
 #define KNOKAN_DIRECTED_GRAPH
 #define KNOKAN_ALGORITHM_DFS
 
 #include "ComponentData.hpp"
+#include "FC.hpp"
 #include "RBD_DB.hpp"
 #include "REBL.hpp"
 #include <KnoKan.hpp>
 #include <Litesaver.hpp>
 #include <Ticket.hpp>
 #include <string>
+
 
 using namespace REBL;
 
@@ -32,12 +35,13 @@ struct RBD::Core
     DB::Connection rbd_db;
 
     Ticket id_dropper;
-    std::unordered_map<std::string, std::vector<int>> component_instance_map;
+    std::map<std::string, std::vector<int>> component_instance_map;
+    FailureCombination::Machine fc_machine;
 
     int start_point_id;
     int end_point_id;
 
-    Core(const std::string_view rbd_db_path);
+    Core(const std::string_view rbd_db_path, const MCSSettings &mcs_settings);
     ~Core();
 
     /**

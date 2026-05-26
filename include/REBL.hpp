@@ -13,6 +13,7 @@
 #define KNOKAN_DIRECTED_GRAPH
 
 #include "ComponentData.hpp"
+#include "MCSSettings.hpp"
 #include <KnoKan.hpp>
 #include <memory>
 #include <string_view>
@@ -23,7 +24,7 @@ namespace REBL
 class RBD
 {
   public:
-    RBD(const std::string_view rbd_db_path);
+    RBD(const std::string_view rbd_db_path, const MCSSettings &mcs_settings);
     ~RBD();
 
   public:

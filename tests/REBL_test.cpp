@@ -10,11 +10,13 @@
 #ifndef _REBL_TEST_HPP
 #define _REBL_TEST_HPP
 
+#include "../include/FC.hpp"
 #include "../include/RBD_DB.hpp"
 #include "../include/REBL.hpp"
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -81,7 +83,8 @@ TEST(REBL, read_rbd_db)
 
 std::string sort_lines_helper(std::string input)
 {
-    // This helper function is AI generated. It is not part of the actual codebase.
+    // This helper function is AI generated. It is not part of the actual
+    // codebase.
     std::istringstream iss(input);
     std::vector<std::string> lines;
     std::string line;
@@ -107,7 +110,7 @@ std::string sort_lines_helper(std::string input)
 TEST(REBL, parse_rbd_db)
 {
     // This parses in the constructor.
-    REBL::RBD rebl("../tests/rbd.db");
+    REBL::RBD rebl("../tests/rbd.db", REBL::MCSSettings());
     auto graph                  = rebl.get_pure_graph();
     auto graph_adjacency_string = rebl.get_graph_adjacency_string(true, true);
     std::string expected_graph_adjacency_string =
@@ -174,6 +177,391 @@ TEST(REBL, parse_rbd_db)
 59 (MGCC->ACC_(m_p,p)) -> [ 60 (ACC_(m_p,p)->Actor_(m_p,p))] (H: 0.022; T: 0.013698; P: 0.000301356))";
     EXPECT_EQ(sort_lines_helper(graph_adjacency_string),
               sort_lines_helper(expected_graph_adjacency_string));
+}
+
+void print_vector_of_strings(std::vector<std::string> vec)
+{
+    for (auto &str : vec)
+    {
+        std::cout << str << "\n";
+    }
+}
+
+TEST(REBL_FC_Machine, combination_size_min1_max3)
+{
+    std::map<std::string, std::vector<int>> component_instance_map;
+    REBL::MCSSettings mcs_settings = {false, 1, 3, 0.0, 0.0};
+    KnoKan::DirectedGraph<int, REBL::ComponentData, EmptyP> rbd;
+
+    rbd.add_node(1, REBL::ComponentData(0.2, 2));
+    component_instance_map["1"] = {1};
+    rbd.add_node(2, REBL::ComponentData(0.2, 2));
+    rbd.add_node(3, REBL::ComponentData(0.2, 2));
+    component_instance_map["2"] = {2, 3};
+    rbd.add_node(4, REBL::ComponentData(0.2, 2));
+    component_instance_map["3"] = {4};
+    rbd.add_node(5, REBL::ComponentData(0.2, 2));
+    component_instance_map["4"] = {5};
+    rbd.add_node(6);
+    rbd.add_node(7, REBL::ComponentData(0.2, 2));
+    component_instance_map["5"] = {7};
+    rbd.add_node(8);
+    component_instance_map["n6_ideal"] = {8};
+
+    // BEGIN #1: this is technically not necessary, but for regression's sake
+    // I'm leaving it in.
+    rbd.add_edge(1, 2);
+    rbd.add_edge(2, 3);
+    rbd.add_edge(3, 4);
+    rbd.add_edge(4, 5);
+    rbd.add_edge(5, 6);
+    rbd.add_edge(6, 7);
+    rbd.add_edge(7, 8);
+    // END #1
+
+    REBL::FailureCombination::Machine fc_machine(component_instance_map,
+                                                 mcs_settings,
+                                                 rbd);
+
+    std::vector<std::vector<std::string>> expected_sequence = {{"1"},
+                                                               {"1", "2"},
+                                                               {"1", "2", "3"},
+                                                               {"1", "2", "4"},
+                                                               {"1", "2", "5"},
+                                                               {"1", "3"},
+                                                               {"1", "3", "4"},
+                                                               {"1", "3", "5"},
+                                                               {"1", "4"},
+                                                               {"1", "4", "5"},
+                                                               {"1", "5"},
+                                                               {"2"},
+                                                               {"2", "3"},
+                                                               {"2", "3", "4"},
+                                                               {"2", "3", "5"},
+                                                               {"2", "4"},
+                                                               {"2", "4", "5"},
+                                                               {"2", "5"},
+                                                               {"3"},
+                                                               {"3", "4"},
+                                                               {"3", "4", "5"},
+                                                               {"3", "5"},
+                                                               {
+                                                                   "4",
+                                                               },
+                                                               {"4", "5"},
+                                                               {"5"}};
+
+    unsigned int ctr = 0;
+    for (auto fc = fc_machine.next(); !fc.empty();
+         fc      = fc_machine.next(), ++ctr)
+    {
+        std::cout << "----------------" << "\n";
+        std::cout << "fc #" << ctr << "\n";
+        print_vector_of_strings(fc);
+        std::cout << "\n";
+        EXPECT_EQ(fc, expected_sequence[ctr]);
+    }
+    EXPECT_NE(ctr, 0);
+}
+
+TEST(REBL_FC_Machine, combination_size_min2_max3)
+{
+    std::map<std::string, std::vector<int>> component_instance_map;
+    REBL::MCSSettings mcs_settings = {false, 2, 3, 0.0, 0.0};
+    KnoKan::DirectedGraph<int, REBL::ComponentData, EmptyP> rbd;
+
+    rbd.add_node(1, REBL::ComponentData(0.2, 2));
+    component_instance_map["1"] = {1};
+    rbd.add_node(2, REBL::ComponentData(0.2, 2));
+    rbd.add_node(3, REBL::ComponentData(0.2, 2));
+    component_instance_map["2"] = {2, 3};
+    rbd.add_node(4, REBL::ComponentData(0.2, 2));
+    component_instance_map["3"] = {4};
+    rbd.add_node(5, REBL::ComponentData(0.2, 2));
+    component_instance_map["4"] = {5};
+    rbd.add_node(6);
+    rbd.add_node(7, REBL::ComponentData(0.2, 2));
+    component_instance_map["5"] = {7};
+    rbd.add_node(8);
+    component_instance_map["n6_ideal"] = {8};
+
+    // BEGIN #1: this is technically not necessary, but for regression's sake
+    // I'm leaving it in.
+    rbd.add_edge(1, 2);
+    rbd.add_edge(2, 3);
+    rbd.add_edge(3, 4);
+    rbd.add_edge(4, 5);
+    rbd.add_edge(5, 6);
+    rbd.add_edge(6, 7);
+    rbd.add_edge(7, 8);
+    // END #1
+
+    REBL::FailureCombination::Machine fc_machine(component_instance_map,
+                                                 mcs_settings,
+                                                 rbd);
+
+    std::vector<std::vector<std::string>> expected_sequence = {
+
+        {"1", "2"},      {"1", "2", "3"}, {"1", "2", "4"}, {"1", "2", "5"},
+        {"1", "3"},      {"1", "3", "4"}, {"1", "3", "5"}, {"1", "4"},
+        {"1", "4", "5"}, {"1", "5"},      {"2", "3"},      {"2", "3", "4"},
+        {"2", "3", "5"}, {"2", "4"},      {"2", "4", "5"}, {"2", "5"},
+        {"3", "4"},      {"3", "4", "5"}, {"3", "5"},      {"4", "5"}};
+
+    unsigned int ctr = 0;
+    for (auto fc = fc_machine.next(); !fc.empty();
+         fc      = fc_machine.next(), ++ctr)
+    {
+        std::cout << "----------------" << "\n";
+        std::cout << "fc #" << ctr << "\n";
+        print_vector_of_strings(fc);
+        std::cout << "\n";
+        EXPECT_EQ(fc, expected_sequence[ctr]);
+    }
+    EXPECT_NE(ctr, 0);
+}
+
+TEST(REBL_FC_Machine, probability_min0dec1_max1)
+{
+    std::map<std::string, std::vector<int>> component_instance_map;
+    REBL::MCSSettings mcs_settings = {true, 0, 0, 0.1, 1.0};
+    KnoKan::DirectedGraph<int, REBL::ComponentData, EmptyP> rbd;
+
+    rbd.add_node(1, REBL::ComponentData(0.2, 2));
+    component_instance_map["1"] = {1};
+    rbd.add_node(2, REBL::ComponentData(0.2, 2));
+    rbd.add_node(3, REBL::ComponentData(0.2, 2));
+    component_instance_map["2"] = {2, 3};
+    rbd.add_node(4, REBL::ComponentData(0.2, 2));
+    component_instance_map["3"] = {4};
+    rbd.add_node(5, REBL::ComponentData(0.2, 2));
+    component_instance_map["4"] = {5};
+    rbd.add_node(6);
+    rbd.add_node(7, REBL::ComponentData(0.2, 2));
+    component_instance_map["5"] = {7};
+    rbd.add_node(8);
+    component_instance_map["n6_ideal"] = {8};
+
+    // BEGIN #1: this is technically not necessary, but for regression's sake
+    // I'm leaving it in.
+    rbd.add_edge(1, 2);
+    rbd.add_edge(2, 3);
+    rbd.add_edge(3, 4);
+    rbd.add_edge(4, 5);
+    rbd.add_edge(5, 6);
+    rbd.add_edge(6, 7);
+    rbd.add_edge(7, 8);
+    // END #1
+
+    REBL::FailureCombination::Machine fc_machine(component_instance_map,
+                                                 mcs_settings,
+                                                 rbd);
+
+    std::vector<std::vector<std::string>> expected_sequence = {
+
+        {"1"},
+        {"1", "2"},
+        {"1", "3"},
+        {"1", "4"},
+        {"1", "5"},
+        {"2"},
+        {"2", "3"},
+        {"2", "4"},
+        {"2", "5"},
+        {"3"},
+        {"3", "4"},
+        {"3", "5"},
+        {"4"},
+        {"4", "5"},
+        {"5"}};
+
+    unsigned int ctr = 0;
+    for (auto fc = fc_machine.next(); !fc.empty();
+         fc      = fc_machine.next(), ++ctr)
+    {
+        std::cout << "----------------" << "\n";
+        std::cout << "fc #" << ctr << "\n";
+        print_vector_of_strings(fc);
+        std::cout << "\n";
+        EXPECT_EQ(fc, expected_sequence[ctr]);
+    }
+    EXPECT_NE(ctr, 0);
+}
+
+TEST(REBL_FC_Machine, probability_min0dec1_max0dec3)
+{
+    std::map<std::string, std::vector<int>> component_instance_map;
+    REBL::MCSSettings mcs_settings = {true, 0, 0, 0.1, 0.3};
+    KnoKan::DirectedGraph<int, REBL::ComponentData, EmptyP> rbd;
+
+    rbd.add_node(1, REBL::ComponentData(0.2, 2));
+    component_instance_map["1"] = {1};
+    rbd.add_node(2, REBL::ComponentData(0.2, 2));
+    rbd.add_node(3, REBL::ComponentData(0.2, 2));
+    component_instance_map["2"] = {2, 3};
+    rbd.add_node(4, REBL::ComponentData(0.2, 2));
+    component_instance_map["3"] = {4};
+    rbd.add_node(5, REBL::ComponentData(0.2, 2));
+    component_instance_map["4"] = {5};
+    rbd.add_node(6);
+    rbd.add_node(7, REBL::ComponentData(0.2, 2));
+    component_instance_map["5"] = {7};
+    rbd.add_node(8);
+    component_instance_map["n6_ideal"] = {8};
+
+    // BEGIN #1: this is technically not necessary, but for regression's sake
+    // I'm leaving it in.
+    rbd.add_edge(1, 2);
+    rbd.add_edge(2, 3);
+    rbd.add_edge(3, 4);
+    rbd.add_edge(4, 5);
+    rbd.add_edge(5, 6);
+    rbd.add_edge(6, 7);
+    rbd.add_edge(7, 8);
+    // END #1
+
+    REBL::FailureCombination::Machine fc_machine(component_instance_map,
+                                                 mcs_settings,
+                                                 rbd);
+
+    std::vector<std::vector<std::string>> expected_sequence = {
+
+        {"1", "2"},
+        {"1", "3"},
+        {"1", "4"},
+        {"1", "5"},
+        {"2", "3"},
+        {"2", "4"},
+        {"2", "5"},
+        {"3", "4"},
+        {"3", "5"},
+        {"4", "5"}};
+
+    unsigned int ctr = 0;
+    for (auto fc = fc_machine.next(); !fc.empty();
+         fc      = fc_machine.next(), ++ctr)
+    {
+        std::cout << "----------------" << "\n";
+        std::cout << "fc #" << ctr << "\n";
+        print_vector_of_strings(fc);
+        std::cout << "\n";
+        EXPECT_EQ(fc, expected_sequence[ctr]);
+    }
+    EXPECT_NE(ctr, 0);
+}
+
+TEST(REBL_FC_Machine, probability_reset_combination_size)
+{
+    std::map<std::string, std::vector<int>> component_instance_map;
+    REBL::MCSSettings mcs_settings = {true, 0, 0, 0.1, 0.3};
+    KnoKan::DirectedGraph<int, REBL::ComponentData, EmptyP> rbd;
+
+    rbd.add_node(1, REBL::ComponentData(0.2, 2));
+    component_instance_map["1"] = {1};
+    rbd.add_node(2, REBL::ComponentData(0.2, 2));
+    rbd.add_node(3, REBL::ComponentData(0.2, 2));
+    component_instance_map["2"] = {2, 3};
+    rbd.add_node(4, REBL::ComponentData(0.2, 2));
+    component_instance_map["3"] = {4};
+    rbd.add_node(5, REBL::ComponentData(0.2, 2));
+    component_instance_map["4"] = {5};
+    rbd.add_node(6);
+    rbd.add_node(7, REBL::ComponentData(0.2, 2));
+    component_instance_map["5"] = {7};
+    rbd.add_node(8);
+    component_instance_map["n6_ideal"] = {8};
+
+    // BEGIN #1: this is technically not necessary, but for regression's sake
+    // I'm leaving it in.
+    rbd.add_edge(1, 2);
+    rbd.add_edge(2, 3);
+    rbd.add_edge(3, 4);
+    rbd.add_edge(4, 5);
+    rbd.add_edge(5, 6);
+    rbd.add_edge(6, 7);
+    rbd.add_edge(7, 8);
+    // END #1
+
+    REBL::FailureCombination::Machine fc_machine(component_instance_map,
+                                                 mcs_settings,
+                                                 rbd);
+
+    std::vector<std::vector<std::string>> expected_sequence = {
+
+        {"1", "2"},
+        {"1", "3"},
+        {"1", "4"},
+        {"1", "5"},
+        {"2", "3"},
+        {"2", "4"},
+        {"2", "5"},
+        {"3", "4"},
+        {"3", "5"},
+        {"4", "5"},
+    };
+
+    unsigned int ctr = 0;
+    for (auto fc = fc_machine.next(); !fc.empty();
+         fc      = fc_machine.next(), ++ctr)
+    {
+        std::cout << "----------------" << "\n";
+        std::cout << "fc #" << ctr << "\n";
+        print_vector_of_strings(fc);
+        std::cout << "\n";
+        EXPECT_EQ(fc, expected_sequence[ctr]);
+    }
+    EXPECT_NE(ctr, 0);
+
+    auto fc = fc_machine.next();
+    EXPECT_EQ(fc, expected_sequence[0]);
+    fc = fc_machine.next();
+    EXPECT_EQ(fc, expected_sequence[1]);
+    fc_machine.reset();
+    fc = fc_machine.next();
+    EXPECT_EQ(fc, expected_sequence[0]);
+
+    REBL::MCSSettings mcs_settings2 = {false, 1, 3, 0.0, 0.0};
+    fc_machine.reset(mcs_settings2);
+
+    std::vector<std::vector<std::string>> expected_sequence2 = {
+
+        {"1"},
+        {"1", "2"},
+        {"1", "2", "3"},
+        {"1", "2", "4"},
+        {"1", "2", "5"},
+        {"1", "3"},
+        {"1", "3", "4"},
+        {"1", "3", "5"},
+        {"1", "4"},
+        {"1", "4", "5"},
+        {"1", "5"},
+        {"2"},
+        {"2", "3"},
+        {"2", "3", "4"},
+        {"2", "3", "5"},
+        {"2", "4"},
+        {"2", "4", "5"},
+        {"2", "5"},
+        {"3"},
+        {"3", "4"},
+        {"3", "4", "5"},
+        {"3", "5"},
+        {"4"},
+        {"4", "5"},
+        {"5"}};
+
+    unsigned int ctr2 = 0;
+    for (auto fc = fc_machine.next(); !fc.empty();
+         fc      = fc_machine.next(), ++ctr2)
+    {
+        std::cout << "----------------" << "\n";
+        std::cout << "fc #" << ctr << "\n";
+        print_vector_of_strings(fc);
+        std::cout << "\n";
+        EXPECT_EQ(fc, expected_sequence2[ctr2]);
+    }
+    EXPECT_NE(ctr2, 0);
 }
 
 #endif // _REBL_TEST_HPP
