@@ -10,13 +10,13 @@
 #ifndef _REBL_HPP
 #define _REBL_HPP
 
-#define KNOKAN_DIRECTED_GRAPH
-
 #include "ComponentData.hpp"
+#include "Kochs.hpp"
 #include "MCSSettings.hpp"
-#include <KnoKan.hpp>
+#include "graphs/DirectedGraph.hpp"
 #include <memory>
 #include <string_view>
+
 
 namespace REBL
 {
@@ -45,6 +45,12 @@ class RBD
      */
     std::string get_graph_adjacency_string(bool with_rel_data,
                                            bool with_component_names);
+
+  public:
+    /**
+     * Runs the Minimal Cut Sets algorithm on the RBD and saves the
+     */
+    Kochs::Object run_minimal_cut_sets();
 
   private:
     /// PIMPL

@@ -21,6 +21,15 @@
 #include <string>
 #include <vector>
 
+void expect_rel_near(double actual, double expected, double rel_tol)
+{
+    double diff  = std::abs(actual - expected);
+    double scale = std::max(std::abs(actual), std::abs(expected));
+
+    EXPECT_LE(diff, rel_tol * scale)
+        << "actual=" << actual << " expected=" << expected;
+}
+
 TEST(REBL, read_rbd_db)
 {
     REBL::DB::Connection rbd_db("../tests/rbd.db");
@@ -562,6 +571,25 @@ TEST(REBL_FC_Machine, probability_reset_combination_size)
         EXPECT_EQ(fc, expected_sequence2[ctr2]);
     }
     EXPECT_NE(ctr2, 0);
+}
+
+TEST(REBL_MCS, simplerbd)
+{
+    double expected_H = 2.511415522436466e-05;
+    double expected_T = 7.264425076603002e-05;
+    double expected_P = 1.824398989895749e-09;
+
+    REBL::RBD rebl("../tests/rbd_simple.db",
+                   REBL::MCSSettings(false, 1, 2, 0.0, 0.0));
+
+    auto system_result = rebl.run_minimal_cut_sets();
+    std::cout << "H:" << system_result.H() << " 1/a \n";
+    std::cout << "T:" << system_result.T() << " a\n";
+    std::cout << "P:" << system_result.P() << " * 100%\n";
+    std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
+    expect_rel_near(system_result.H(), expected_H, 1e-4);
+    expect_rel_near(system_result.T(), expected_T, 1e-4);
+    expect_rel_near(system_result.P(), expected_P, 1e-4);
 }
 
 #endif // _REBL_TEST_HPP

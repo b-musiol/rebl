@@ -12,6 +12,7 @@
 
 #include "ComponentData.hpp"
 #include "MCSSettings.hpp"
+#include "graphs/DirectedGraph.hpp"
 
 #include <map>
 #include <string>

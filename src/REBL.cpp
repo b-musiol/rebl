@@ -98,3 +98,8 @@ std::string RBD::get_graph_adjacency_string(bool with_rel_data,
 
     return out.str();
 }
+
+Kochs::Object RBD::run_minimal_cut_sets()
+{
+    return core->run_mcs_and_save();
+}

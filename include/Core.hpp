@@ -12,18 +12,16 @@
 
 #include "MCSSettings.hpp"
 #include <map>
-#define KNOKAN_DIRECTED_GRAPH
-#define KNOKAN_ALGORITHM_DFS
 
 #include "ComponentData.hpp"
 #include "FC.hpp"
 #include "RBD_DB.hpp"
 #include "REBL.hpp"
-#include <KnoKan.hpp>
+#include "graphs/DirectedGraph.hpp"
+#include <Kochs.hpp>
 #include <Litesaver.hpp>
 #include <Ticket.hpp>
 #include <string>
-
 
 using namespace REBL;
 
@@ -62,6 +60,8 @@ struct RBD::Core
      * `std::optional` that is indeed empty.
      */
     std::optional<std::string> find_component_name(int component_id);
+
+    Kochs::Object run_mcs_and_save();
 };
 
 #endif // _REBL_CORE_HPP

@@ -10,10 +10,7 @@
 #ifndef _REBL_COMPONENTDATA_HPP
 #define _REBL_COMPONENTDATA_HPP
 
-#define KNOKAN_DIRECTED_GRAPH
-#define KNOKAN_ALGORITHM_DFS
-
-#include <KnoKan.hpp>
+#include <misc/Property.hpp>
 #include <Kochs.hpp>
 
 using EmptyP = KnoKan::Property::Predefined::NoWeight;

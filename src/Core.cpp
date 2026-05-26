@@ -8,6 +8,8 @@
  */
 
 #include "../include/Core.hpp"
+#include "algorithms/DFS.hpp"
+#include <Kochs.hpp>
 #include <memory>
 #include <stdexcept>
 
@@ -170,4 +172,85 @@ std::optional<std::string> RBD::Core::find_component_name(int value)
     }
 
     return std::nullopt;
+}
+
+Kochs::Object RBD::Core::run_mcs_and_save()
+{
+    Kochs::Object system_reliability;
+    // This method loops over all failure combinations (they are generated
+    // live through the failure combination machine).
+    // At each loop it first calculates the result, then saves the failure
+    // combination result to the database along with the rbd.
+    // After all results are calculated, it calculates the accumulated result
+    // and writes that into the database as well.
+    for (auto fc = fc_machine.next(); !fc.empty(); fc = fc_machine.next())
+    {
+        Kochs::Object fc_reliability;
+        // Extract the block instances in the current failure combination,
+        // which only carries the actual components, that can have multiple
+        // instances.
+        std::unordered_set<int> fc_block_instances;
+        for (auto &component : fc)
+        {
+            for (auto &instance_id : component_instance_map.at(component))
+            {
+                fc_block_instances.insert(instance_id);
+            }
+        }
+
+        // check if the rbd is still traversable even if the failure
+        // combination is applied
+        bool system_is_functional =
+            KnoKan::Algorithm::DFS::path_exists(*rbd,
+                                                start_point_id,
+                                                end_point_id,
+                                                fc_block_instances);
+        if (system_is_functional)
+        {
+            // If the system is functional, this failure combination is only
+            // logged and not counted
+        }
+        else // if (!system_is_functional)
+        {
+            // If the system is not functional, this failure combination
+            // contributes to the whole system failure values.
+            bool first = true;
+            for (auto &component : fc)
+            {
+                // We only need one of the instances of each component, because
+                // the way we created them, all instances share the same
+                // reliability data.
+                const auto &instance_id =
+                    component_instance_map.at(component).front();
+                // This now holds the reliability data that we want to use.
+                const auto &rel_data =
+                    rbd->node_properties.at(instance_id).get_rel_data();
+                if (first)
+                {
+                    // Since we want to combine all component data with AND,
+                    // and the default is an ideal component, this would absorb
+                    // all data. So we need to instantiate the first entry of
+                    // the entire chain if AND combined objects with actual
+                    // data.
+                    fc_reliability = rel_data;
+                    first          = false;
+                }
+                else
+                {
+                    // From the second component on we can just use operator
+                    // overloading.
+                    fc_reliability = fc_reliability & rel_data;
+                }
+            }
+            // Now we just need to add it to the system reliability. That is the
+            // OR operator. Here the operator overloading can be used right
+            // away, because an ideal component does not absorb through an OR
+            // operator.
+            system_reliability = system_reliability | fc_reliability;
+        }
+    }
+
+    // Here we return the system reliability, mostly for testing purposes. But
+    // the application may also do something useful with this.
+    return system_reliability;
 }
