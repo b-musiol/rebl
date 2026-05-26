@@ -13,6 +13,7 @@
 #include "../include/FC.hpp"
 #include "../include/RBD_DB.hpp"
 #include "../include/REBL.hpp"
+#include <filesystem>
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -590,6 +591,17 @@ TEST(REBL_MCS, simplerbd)
     expect_rel_near(system_result.H(), expected_H, 1e-4);
     expect_rel_near(system_result.T(), expected_T, 1e-4);
     expect_rel_near(system_result.P(), expected_P, 1e-4);
+}
+
+TEST(REBL_RBD, template_dump)
+{
+    constexpr const char *db_path = "REBL_RBD_template_dump.db";
+    if (std::filesystem::exists(std::filesystem::path(db_path)))
+    {
+        std::filesystem::remove(std::filesystem::path(db_path));
+    }
+    REBL::RBD::spawn_rbd_db_template(db_path);
+    EXPECT_TRUE(std::filesystem::exists(std::filesystem::path(db_path)));
 }
 
 #endif // _REBL_TEST_HPP

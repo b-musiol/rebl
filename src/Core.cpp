@@ -254,3 +254,8 @@ Kochs::Object RBD::Core::run_mcs_and_save()
     // the application may also do something useful with this.
     return system_reliability;
 }
+
+void RBD::Core::spawn_rbd_db_template(std::filesystem::path db_path)
+{
+    DB::Connection::spawn_rbd_db_template(db_path);
+}

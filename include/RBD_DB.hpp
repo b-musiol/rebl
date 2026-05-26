@@ -37,6 +37,9 @@ class Connection : public Litesaver::Base
      * Gets the rbd components as a map of explicit reliability data.
      */
     std::unordered_map<std::string, Kochs::Object> get_rbd_components();
+
+  public:
+    static void spawn_rbd_db_template(std::filesystem::path db_path);
 };
 
 } // namespace DB

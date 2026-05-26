@@ -8,6 +8,7 @@
 #include "../include/REBL.hpp"
 #include "../include/Core.hpp"
 #include <sstream>
+#include <Litesaver.hpp>
 
 using namespace REBL;
 
@@ -102,4 +103,9 @@ std::string RBD::get_graph_adjacency_string(bool with_rel_data,
 Kochs::Object RBD::run_minimal_cut_sets()
 {
     return core->run_mcs_and_save();
+}
+
+void RBD::spawn_rbd_db_template(std::filesystem::path db_path)
+{
+    RBD::Core::spawn_rbd_db_template(db_path);
 }

@@ -14,6 +14,7 @@
 #include "Kochs.hpp"
 #include "MCSSettings.hpp"
 #include "graphs/DirectedGraph.hpp"
+#include <filesystem>
 #include <memory>
 #include <string_view>
 
@@ -48,9 +49,16 @@ class RBD
 
   public:
     /**
-     * Runs the Minimal Cut Sets algorithm on the RBD and saves the
+     * Runs the Minimal Cut Sets algorithm on the RBD and saves the results
      */
     Kochs::Object run_minimal_cut_sets();
+
+  public:
+    /**
+     * Spawns an empty RBD SQLite Database template at `db_path` which can be
+     * filled with an RBD and associated data.
+     */
+    static void spawn_rbd_db_template(std::filesystem::path db_path);
 
   private:
     /// PIMPL

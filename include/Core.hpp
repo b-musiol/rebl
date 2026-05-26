@@ -62,6 +62,8 @@ struct RBD::Core
     std::optional<std::string> find_component_name(int component_id);
 
     Kochs::Object run_mcs_and_save();
+    
+    static void spawn_rbd_db_template(std::filesystem::path db_path);
 };
 
 #endif // _REBL_CORE_HPP
