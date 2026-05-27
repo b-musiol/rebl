@@ -18,7 +18,6 @@
 #include <memory>
 #include <string_view>
 
-
 namespace REBL
 {
 

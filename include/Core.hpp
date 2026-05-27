@@ -61,9 +61,41 @@ struct RBD::Core
      */
     std::optional<std::string> find_component_name(int component_id);
 
+    /**
+     * Runs the enumerative minimal cut sets algorithm to calculate the rbd.
+     */
     Kochs::Object run_mcs_and_save();
-    
+
+    /**
+     * Spawns a RBD DB Template at `db_path`.
+     */
     static void spawn_rbd_db_template(std::filesystem::path db_path);
+
+  private:
+    unsigned int get_next_run_id();
+    SQLiteDB::Row make_params_insert_result_summary_row(
+        unsigned int run_id,
+        bool ok,
+        double H,
+        double T,
+        bool use_probability,
+        unsigned int min_combination_size,
+        unsigned int max_combination_size,
+        double min_probability,
+        double max_probability);
+    SQLiteDB::Row make_params_update_result_summary_row(unsigned int run_id,
+                                                        bool ok,
+                                                        double H,
+                                                        double T);
+    SQLiteDB::Row make_params_insert_result_fc_row(unsigned int fc_id,
+                                                   unsigned int run_id,
+                                                   double H,
+                                                   double T);
+    SQLiteDB::Row make_params_insert_detail_fc_row(unsigned int fc_id,
+                                                   unsigned int run_id,
+                                                   double H,
+                                                   double T,
+                                                   std::string component);
 };
 
 #endif // _REBL_CORE_HPP

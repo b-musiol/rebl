@@ -54,6 +54,10 @@ class Machine
      * `mcs_settings` to have a different run through the exact same rbd.
      */
     void reset(MCSSettings mcs_settings);
+    /**
+     * Gets the current settings.
+     */
+    MCSSettings get_current_settings();
 
   private:
     enum class ActionState : size_t

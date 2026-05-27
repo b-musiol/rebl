@@ -552,3 +552,12 @@ void Machine::reset()
 {
     failure_combination = std::vector<std::string>{};
 }
+
+REBL::MCSSettings Machine::get_current_settings()
+{
+    return MCSSettings{.use_probability      = use_probability,
+                       .min_combination_size = min_combination_size,
+                       .max_combination_size = max_combination_size,
+                       .min_probability      = min_probability,
+                       .max_probability      = max_probability};
+}

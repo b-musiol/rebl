@@ -180,18 +180,18 @@ void DB::Connection::spawn_rbd_db_template(std::filesystem::path db_path)
     // R"_helptext_()_helptext_";
 
     constexpr const char *help_input_component_types_name =
-        R"_helptext_(Name of the component type. This must be unique.)_helptext_";
+        R"_helptext_(Name of the component type. This must be unique. Multiply with H_factor to neutralize implicit units.)_helptext_";
     constexpr const char *help_input_component_types_H =
-        R"_helptext_(Rate of Failure, possibly per length unit.)_helptext_";
+        R"_helptext_(Rate of Failure, possibly per length unit. Multiply with T_factor to neutralize implicit units.)_helptext_";
     constexpr const char *help_input_component_types_T =
         R"_helptext_(Duration of a failed state.)_helptext_";
 
     constexpr const char *help_input_components_name =
         R"_helptext_(Name of the component. This must be unique. If the component does not appear here but is used in the RBD, then it is considered to be ideal.)_helptext_";
     constexpr const char *help_input_components_H =
-        R"_helptext_(Rate of Failure)_helptext_";
+        R"_helptext_(Rate of Failure. Multiply with H_factor to neutralize implicit units.)_helptext_";
     constexpr const char *help_input_components_T =
-        R"_helptext_(Duration of a failed state.)_helptext_";
+        R"_helptext_(Duration of a failed state. Multiply with T_factor to neutralize implicit units.)_helptext_";
     constexpr const char *help_input_components_length =
         R"_helptext_(The length of the component. If NULL, then it is implicitly treated as 1. This is multiplied onto H (example: lines).)_helptext_";
     constexpr const char *help_input_components_type =
@@ -235,9 +235,9 @@ Generally, if strings (if across the rbd the same string appears multiple times,
     constexpr const char *help_output_result_summary_ok =
         R"_helptext_(1 if the calculation was successful, otherwise 0)_helptext_";
     constexpr const char *help_output_result_summary_H =
-        R"_helptext_(Mean Rate of Failure for the entire system.)_helptext_";
+        R"_helptext_(Mean Rate of Failure for the entire system. Multiply with H_factor to neutralize implicit units.)_helptext_";
     constexpr const char *help_output_result_summary_T =
-        R"_helptext_(Mean Duration of a failed state of the entire system.)_helptext_";
+        R"_helptext_(Mean Duration of a failed state of the entire system. Multiply with T_factor to neutralize implicit units.)_helptext_";
     constexpr const char *help_output_result_summary_use_probability =
         R"_helptext_(1 if probability bounds for failure combinations were used, 0 if the combination size was used.)_helptext_";
     constexpr const char *help_output_result_summary_min_combination_size =
@@ -254,9 +254,9 @@ Generally, if strings (if across the rbd the same string appears multiple times,
     constexpr const char *help_output_result_fc_fc_id =
         R"_helptext_(ID of the failure combination, only valid within a run.)_helptext_";
     constexpr const char *help_output_result_fc_H =
-        R"_helptext_(Rate of Failure for the failure combination)_helptext_";
+        R"_helptext_(Rate of Failure for the failure combination. Multiply with H_factor to neutralize implicit units.)_helptext_";
     constexpr const char *help_output_result_fc_T =
-        R"_helptext_(Duration of a failed state for the failure combination)_helptext_";
+        R"_helptext_(Duration of a failed state for the failure combination. Multiply with T_factor to neutralize implicit units.)_helptext_";
 
     constexpr const char *help_output_detail_fc_run_id =
         R"_helptext_(ID of the calculation run)_helptext_";
@@ -265,9 +265,9 @@ Generally, if strings (if across the rbd the same string appears multiple times,
     constexpr const char *help_output_detail_fc_component =
         R"_helptext_(component name)_helptext_";
     constexpr const char *help_output_detail_fc_H =
-        R"_helptext_(Rate of Failure for the component)_helptext_";
+        R"_helptext_(Rate of Failure for the component. Multiply with H_factor to neutralize implicit units.)_helptext_";
     constexpr const char *help_output_detail_fc_T =
-        R"_helptext_(Duration of a failed state for the component)_helptext_";
+        R"_helptext_(Duration of a failed state for the component. Multiply with T_factor to neutralize implicit units.)_helptext_";
     Litesaver::TableConfig output_config;
     output_config["result_summary"] = {
         {{"run_id", {ValType::INTEGER, help_output_result_summary_run_id}},
