@@ -90,6 +90,15 @@ add_executable(RunTests_REBL tests/REBL_test.cpp)
 target_link_libraries(RunTests_REBL REBL GTest::gtest_main)
 target_compile_features(RunTests_REBL PUBLIC cxx_std_20)
 
+
+add_executable(reblapp src/REBLAPP.cpp)
+target_link_libraries(reblapp REBL)
+target_compile_features(reblapp PUBLIC cxx_std_20)
+target_link_options(reblapp PRIVATE
+    -static-libgcc
+    -static-libstdc++
+)
+
 include(GoogleTest)
 enable_testing()
 gtest_discover_tests(RunTests_REBL)
