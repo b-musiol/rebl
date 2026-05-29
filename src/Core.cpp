@@ -231,12 +231,12 @@ Kochs::Object RBD::Core::run_mcs_and_save()
     for (auto fc = fc_machine.next(); !fc.empty(); fc = fc_machine.next())
     {
         fc_ctr++;
-        std::cout << "FC#" << fc_ctr << ": ";
-        for (auto &fc_entry : fc)
-        {
-            std::cout << fc_entry << " ";
-        }
-        std::cout << "\n";
+        // std::cout << "FC#" << fc_ctr << ": ";
+        // for (auto &fc_entry : fc)
+        // {
+        //     std::cout << fc_entry << " ";
+        // }
+        // std::cout << "\n";
 
         Kochs::Object fc_reliability;
         // Extract the block instances in the current failure combination,
