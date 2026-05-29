@@ -62,70 +62,29 @@ class Machine
   private:
     enum class ActionState : size_t
     {
-        INIT,
-        RESET_AND_DONE,
-        VERT_INCREMENT,
-        VERT_DECREMENT_AND_HORZ_INCREMENT,
-        HORZ_INCREMENT,
-        DONE
-    };
-
-    enum class PreState : size_t
-    {
-        NEW_FC         = 0,
-        TOO_PROBABLE   = 1,
-        TOO_IMPROBABLE = 2,
-        OK             = 3
-    };
-
-    enum class ThisState : size_t
-    {
-        TOO_PROBABLE   = 1,
-        TOO_IMPROBABLE = 2,
-        OK             = 3
-    };
-
-    struct State
-    {
-        /**
-         * State of the internal FC in last round.
-         * NEW_FC if this is the first round.
-         */
-        PreState pre_state;
-        /**
-         * State of the internal FC right now
-         */
-        ThisState this_state;
-        /**
-         * Is incrementation (horizontal or vertical) possible?
-         */
-        bool incr_possible;
-        /**
-         * Is vertical decrementation possible?
-         */
-        bool vert_decr_possible;
+        BEGIN   = 1,
+        CORE_1  = 2,
+        CORE_2  = 3,
+        UPWARDS = 4,
+        EXIT    = 5
     };
 
     // fc: failure combination
   private:
-    void set_fc_gen_this_state(ThisState &this_state);
-    bool is_incr_possible();
-    bool is_vert_decr_possible();
-    ActionState evaluate_fc_state_machine(State &state);
+    std::vector<std::string> copy_failure_combination();
     bool fc_is_too_improbable();
     bool fc_is_too_probable();
-    bool fc_increment_vertical();
-    bool fc_decrement_vertical();
-    bool fc_increment_horizontal();
     Kochs::Object read_rel_data(const std::string &fc_component);
     Kochs::Object accumulate_rel_data_in_fc();
 
   private:
-    std::vector<std::string> failure_combination;
+    std::vector<std::map<std::string, std::vector<int>>::iterator>
+        failure_combination;
+    bool begin;
 
   private:
-    std::map<std::string, std::vector<int>> &component_instance_map;
-    std::unordered_map<int, ComponentData> &node_properties;
+    std::map<std::string, std::vector<int>> component_instance_map;
+    std::unordered_map<int, ComponentData> node_properties;
 
   private:
     bool use_probability;
