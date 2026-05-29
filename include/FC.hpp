@@ -83,8 +83,8 @@ class Machine
     bool begin;
 
   private:
-    std::map<std::string, std::vector<int>> component_instance_map;
-    std::unordered_map<int, ComponentData> node_properties;
+    std::map<std::string, std::vector<int>> &component_instance_map;
+    std::unordered_map<int, ComponentData> &node_properties;
 
   private:
     bool use_probability;

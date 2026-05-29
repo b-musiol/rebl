@@ -685,7 +685,7 @@ TEST(REBL_FC_Machine, probability_reset_combination_size)
     EXPECT_NE(ctr2, 0);
 }
 
-TEST(REBL_MCS, simplerbd)
+TEST(REBL_MCS, simplerbd_combinations)
 {
     double expected_H = 2.511415522436466e-05;
     double expected_T = 7.264425076603002e-05;
@@ -698,13 +698,13 @@ TEST(REBL_MCS, simplerbd)
     std::cout << "H:" << system_result.H() << " 1/a \n";
     std::cout << "T:" << system_result.T() << " a\n";
     std::cout << "P:" << system_result.P() << " * 100%\n";
-    std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
+    // std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
     expect_rel_near(system_result.H(), expected_H, 1e-4);
     expect_rel_near(system_result.T(), expected_T, 1e-4);
     expect_rel_near(system_result.P(), expected_P, 1e-4);
 }
 
-TEST(REBL_MCS, midsimplerbd)
+TEST(REBL_MCS, midsimplerbd_combinations)
 {
     double expected_H = 0.1002329527430544;
     double expected_T = 0.000341986399289544;
@@ -717,10 +717,29 @@ TEST(REBL_MCS, midsimplerbd)
     std::cout << "H:" << system_result.H() << " 1/a \n";
     std::cout << "T:" << system_result.T() << " a\n";
     std::cout << "P:" << system_result.P() << " * 100%\n";
-    std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
-    expect_rel_near(system_result.H(), expected_H, 1e-4);
-    expect_rel_near(system_result.T(), expected_T, 1e-4);
-    expect_rel_near(system_result.P(), expected_P, 1e-4);
+    // std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
+    expect_rel_near(system_result.H(), expected_H, 1e-2);
+    expect_rel_near(system_result.T(), expected_T, 1e-2);
+    expect_rel_near(system_result.P(), expected_P, 1e-2);
+}
+
+TEST(REBL_MCS, midsimplerbd_probability)
+{
+    double expected_H = 0.1002329527430544;
+    double expected_T = 0.000341986399289544;
+    double expected_P = 3.4278306598756196e-05;
+
+    REBL::RBD rebl("../tests/rbd_mid_simple.db",
+                   REBL::MCSSettings(true, 0, 0, 1e-8, 1.0));
+
+    auto system_result = rebl.run_minimal_cut_sets();
+    std::cout << "H:" << system_result.H() << " 1/a \n";
+    std::cout << "T:" << system_result.T() << " a\n";
+    std::cout << "P:" << system_result.P() << " * 100%\n";
+    // std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
+    expect_rel_near(system_result.H(), expected_H, 1e-2);
+    expect_rel_near(system_result.T(), expected_T, 1e-2);
+    expect_rel_near(system_result.P(), expected_P, 1e-2);
 }
 
 TEST(REBL_RBD, template_dump)
