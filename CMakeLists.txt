@@ -94,10 +94,16 @@ target_compile_features(RunTests_REBL PUBLIC cxx_std_20)
 add_executable(reblapp src/REBLAPP.cpp)
 target_link_libraries(reblapp REBL)
 target_compile_features(reblapp PUBLIC cxx_std_20)
-target_link_options(reblapp PRIVATE
-    -static-libgcc
-    -static-libstdc++
-)
+if(MSVC)
+    # Use static CRT (/MT, /MTd)
+    set_property(TARGET reblapp PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_link_options(reblapp PRIVATE
+        -static-libgcc
+        -static-libstdc++
+    )
+endif()
 
 include(GoogleTest)
 enable_testing()
