@@ -15,7 +15,6 @@
 #include <iostream>
 #include <string>
 
-
 int main(int argc, const char **argv)
 {
 
@@ -31,11 +30,11 @@ int main(int argc, const char **argv)
         bool next_is_min_combination = false;
         bool next_is_max_combination = false;
 
-        bool use_probability          = false;
-        double min_probability        = 1e-10;
-        double max_probability        = 1.0;
-        unsigned long min_combination = 1;
-        unsigned long max_combination = 2;
+        bool use_probability         = false;
+        double min_probability       = 1e-10;
+        double max_probability       = 1.0;
+        unsigned int min_combination = 1;
+        unsigned int max_combination = 2;
 
         std::filesystem::path rbd_db_path;
         bool next_is_rbd_db_path = false;
