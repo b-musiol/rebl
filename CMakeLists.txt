@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.14)
 
 project(REBL)
 
+option(REBL_BUILD_TESTS "Build tests for REBL" ON)
+SET(KNOKAN_BUILD_TESTS OFF)
+SET(TICKET_BUILD_TESTS OFF)
+SET(KNOKAN_BUILD_TESTS OFF)
+SET(LITESAVER_BUILD_TESTS OFF)
+SET(KOCHS_BUILD_TESTS OFF)
+
 add_library(REBL
   src/REBL.cpp
   src/Core.cpp
@@ -83,6 +90,7 @@ target_include_directories(REBL PUBLIC
     ${json_SOURCE_DIR}/include/
 )
 
+if(REBL_BUILD_TESTS)
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
@@ -115,3 +123,4 @@ endif()
 include(GoogleTest)
 enable_testing()
 gtest_discover_tests(RunTests_REBL)
+endif()
