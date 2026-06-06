@@ -10,13 +10,13 @@
 #ifndef _REBL_CORE_HPP
 #define _REBL_CORE_HPP
 
-#include "MCSSettings.hpp"
+#include "../include/MCSSettings.hpp"
 #include <map>
 
-#include "ComponentData.hpp"
+#include "../include/ComponentData.hpp"
+#include "../include/REBL.hpp"
 #include "FC.hpp"
 #include "RBD_DB.hpp"
-#include "REBL.hpp"
 #include "graphs/DirectedGraph.hpp"
 #include <Kochs.hpp>
 #include <Litesaver.hpp>

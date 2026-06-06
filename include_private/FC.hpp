@@ -10,8 +10,8 @@
 #ifndef _REBL_FC_HPP
 #define _REBL_FC_HPP
 
-#include "ComponentData.hpp"
-#include "MCSSettings.hpp"
+#include "../include/ComponentData.hpp"
+#include "../include/MCSSettings.hpp"
 #include "graphs/DirectedGraph.hpp"
 
 #include <map>

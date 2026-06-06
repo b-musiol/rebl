@@ -1,6 +1,6 @@
 /**
- * Wrapper App to run basic things in REBL - Library for handling and analysis of
- * REliability BLock diagrams.
+ * Wrapper App to run basic things in REBL - Library for handling and analysis
+ * of REliability BLock diagrams.
  *
  * Author: Bartek Musiol (bmusiol@proton.me)
  *
@@ -10,7 +10,7 @@
 #ifndef _REBL_REBLAPP_HPP
 #define _REBL_REBLAPP_HPP
 
-constexpr const char * helptext = R"helptext(
+constexpr const char *helptext = R"helptext(
 NAME
     REBLAPP - Wrapper App to run basic things in REBL (Library for handling and
               analysis of REliability BLock diagrams)
@@ -91,7 +91,6 @@ SOFTWARE.
 
 )helptext";
 
-int main(int argc, const char** argv);
-
+int main(int argc, const char **argv);
 
 #endif // _REBL_REBLAPP_HPP

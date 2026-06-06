@@ -10,9 +10,9 @@
 #ifndef _REBL_TEST_HPP
 #define _REBL_TEST_HPP
 
-#include "../include/FC.hpp"
-#include "../include/RBD_DB.hpp"
 #include "../include/REBL.hpp"
+#include "../include_private/FC.hpp"
+#include "../include_private/RBD_DB.hpp"
 #include <filesystem>
 #include <gtest/gtest.h>
 

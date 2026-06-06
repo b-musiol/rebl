@@ -7,7 +7,7 @@
  * See LICENSE
  */
 
-#include "../include/REBLAPP.hpp"
+#include "../include_private/REBLAPP.hpp"
 
 #include "../include/REBL.hpp"
 

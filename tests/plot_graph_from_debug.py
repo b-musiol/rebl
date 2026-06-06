@@ -78,11 +78,13 @@ DEBUG_TEXT = r"""
 59 (MGCC->ACC_(m_p,p)) -> [ 60 (ACC_(m_p,p)->Actor_(m_p,p))] (H: 0.022; T: 0.013698; P: 0.000301356)
 """
 
+
 def is_virtual_node(label: str) -> bool:
     """
     Returns True if the node name contains §...§
     """
-    return re.search(r'§.*?§', label) is not None
+    return re.search(r"§.*?§", label) is not None
+
 
 # ============================================================
 # GRAPH LAYOUT CONFIGURATION

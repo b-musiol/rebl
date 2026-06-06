@@ -10,8 +10,8 @@
 #ifndef _REBL_COMPONENTDATA_HPP
 #define _REBL_COMPONENTDATA_HPP
 
-#include <misc/Property.hpp>
 #include <Kochs.hpp>
+#include <misc/Property.hpp>
 
 using EmptyP = KnoKan::Property::Predefined::NoWeight;
 

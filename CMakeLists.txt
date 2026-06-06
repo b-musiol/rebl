@@ -46,7 +46,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(litesaver)
 target_include_directories(REBL PUBLIC
-    ${litesaver_SOURCE_DIR}/include/
+    ${litesaver_SOURCE_DIR}/incl/
 )
 target_link_libraries(REBL PUBLIC litesaver)
 

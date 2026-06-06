@@ -7,15 +7,15 @@
  * See LICENSE
  */
 
-#include "../include/Core.hpp"
+#include "../include_private/Core.hpp"
 #include "algorithms/DFS.hpp"
 #include "rbd_db_queries.hpp"
 #include <Kochs.hpp>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <variant>
 #include <vector>
-#include <iostream>
 
 using namespace REBL;
 

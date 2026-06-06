@@ -6,10 +6,9 @@
  * See LICENSE
  */
 #include "../include/REBL.hpp"
-#include "../include/Core.hpp"
+#include "../include_private/Core.hpp"
 #include <Litesaver.hpp>
 #include <sstream>
-
 
 using namespace REBL;
 
