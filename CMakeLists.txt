@@ -14,6 +14,13 @@ target_compile_features(REBL PUBLIC cxx_std_20)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(APPLE) # Use GCC from Homebrew for MacOS
+# You might need to export CC=opt/homebrew/bin/gcc-<version>
+#                   export CXX=opt/homebrew/bin/g++-<version>
+    find_library(ICONV_LIB iconv REQUIRED)
+    target_link_libraries(REBL PRIVATE ${ICONV_LIB})
+endif()
+
 include(FetchContent)
 
 FetchContent_Declare(
