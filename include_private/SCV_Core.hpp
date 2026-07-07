@@ -1,38 +1,26 @@
 /**
- * Public Header for REBL-SCV - Library for handling and analysis of
+ * Core Header for REBL-SCV - Library for handling and analysis of
  * REliability BLock diagrams.
  * Provides methods to build the REBL reliability block diagram as a JSON
  * through code.
  *
- * "Reportin' for duty."
+ * "In the rear with the gear."
  *
  * Author: Bartek Musiol (bmusiol@proton.me)
  *
  * See LICENSE
  */
 
-#ifndef _REBL_SCV_HPP
-#define _REBL_SCV_HPP
+#include "../include/SCV.hpp"
 
-#include <memory>
-#include <string>
-#include <string_view>
+using namespace REBL;
 
-namespace REBL
+struct SCV::Core
 {
 
-class SCV
-{
-  public:
-    SCV();
-    ~SCV();
+    Core();
+    ~Core();
 
-  public:
-    /// PIMPL
-    struct Core;
-    std::unique_ptr<Core> m_core;
-
-  public:
     /**
      * Gets the internal JSON as a string.
      */
@@ -42,7 +30,6 @@ class SCV
      */
     void save_to_file(const std::string_view json_path);
 
-  public:
     /**
      * Deletes the currently internally saved RBD and begins building mode with
      * the initial node.
@@ -83,7 +70,3 @@ class SCV
      */
     unsigned int rewind();
 };
-
-} // namespace REBL
-
-#endif // _REBL_SCV_HPP
