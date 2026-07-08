@@ -15,10 +15,14 @@ add_library(REBL
   src/ComponentData.cpp
   src/RBD_DB.cpp
   src/FC.cpp
+)
+target_compile_features(REBL PUBLIC cxx_std_20)
+
+add_library(SCV
   src/SCV.cpp
   src/SCV_Core.cpp
 )
-target_compile_features(REBL PUBLIC cxx_std_20)
+target_compile_features(SCV PUBLIC cxx_std_20)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -91,6 +95,10 @@ target_link_libraries(REBL PRIVATE nlohmann_json::nlohmann_json)
 target_include_directories(REBL PUBLIC
     ${json_SOURCE_DIR}/include/
 )
+target_link_libraries(SCV PRIVATE nlohmann_json::nlohmann_json)
+target_include_directories(SCV PUBLIC
+    ${json_SOURCE_DIR}/include/
+)
 
 if(REBL_BUILD_TESTS)
 FetchContent_Declare(
@@ -104,7 +112,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(RunTests_REBL tests/REBL_test.cpp)
-target_link_libraries(RunTests_REBL REBL GTest::gtest_main)
+target_link_libraries(RunTests_REBL REBL SCV GTest::gtest_main)
 target_compile_features(RunTests_REBL PUBLIC cxx_std_20)
 target_compile_definitions(RunTests_REBL PRIVATE
     TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests"
