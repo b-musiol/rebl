@@ -11,6 +11,7 @@
 #define _REBL_TEST_HPP
 
 #include "../include/REBL.hpp"
+#include "../include/SCV.hpp"
 #include "../include_private/FC.hpp"
 #include "../include_private/RBD_DB.hpp"
 #include <filesystem>
@@ -751,6 +752,33 @@ TEST(REBL_RBD, template_dump)
     }
     REBL::RBD::spawn_rbd_db_template(db_path);
     EXPECT_TRUE(std::filesystem::exists(std::filesystem::path(db_path)));
+}
+
+TEST(SCV, random_rbd)
+{
+    std::string jsn;
+    REBL::SCV scv;
+    scv.init();
+    scv.place("A");
+    scv.place("B");
+    scv.place("C");
+    scv.fork();
+    scv.place("D");
+    scv.place("E");
+    scv.rewind();
+    scv.place("F");
+    scv.place("G");
+    scv.fork();
+    scv.place("H");
+    scv.rewind();
+    scv.place("I");
+    scv.join();
+    scv.place("J");
+    scv.join();
+    jsn = scv.get_json_string();
+    EXPECT_EQ(
+        jsn,
+        R"result(["A","B","C",["D","E"],["F","G",["H"],["I"],null,"J"],null])result");
 }
 
 #endif // _REBL_TEST_HPP

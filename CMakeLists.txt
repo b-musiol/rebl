@@ -15,6 +15,8 @@ add_library(REBL
   src/ComponentData.cpp
   src/RBD_DB.cpp
   src/FC.cpp
+  src/SCV.cpp
+  src/SCV_Core.cpp
 )
 target_compile_features(REBL PUBLIC cxx_std_20)
 
