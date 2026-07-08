@@ -18,6 +18,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -779,6 +780,42 @@ TEST(SCV, random_rbd)
     jsn = scv.get_json_string();
     EXPECT_EQ(
         jsn,
+        R"result(["A","B","C",["D","E"],["F","G",["H"],["I"],null,"J"],null])result");
+}
+
+TEST(SCV, random_rbd_dump_to_disk)
+{
+    std::string jsn;
+    REBL::SCV scv;
+    scv.init();
+    scv.place("A");
+    scv.place("B");
+    scv.place("C");
+    scv.fork();
+    scv.place("D");
+    scv.place("E");
+    scv.rewind();
+    scv.place("F");
+    scv.place("G");
+    scv.fork();
+    scv.place("H");
+    scv.rewind();
+    scv.place("I");
+    scv.join();
+    scv.place("J");
+    scv.join();
+    jsn = scv.get_json_string();
+    EXPECT_EQ(
+        jsn,
+        R"result(["A","B","C",["D","E"],["F","G",["H"],["I"],null,"J"],null])result");
+    auto file_path = std::string(TEST_DATA_DIR) + "/scv_dump.json";
+    scv.save_to_file(file_path);
+    std::ifstream jF;
+    jF.open(file_path);
+    std::string jBuf;
+    jF >> jBuf;
+    EXPECT_EQ(
+        jBuf,
         R"result(["A","B","C",["D","E"],["F","G",["H"],["I"],null,"J"],null])result");
 }
 

@@ -42,7 +42,8 @@ std::string SCV::Core::get_json_string()
 
 void SCV::Core::save_to_file(std::string json_path)
 {
-    std::fstream jF(json_path.c_str(), std::fstream::in);
+    std::ofstream jF;
+    jF.open(json_path.c_str());
 
     jF << get_json_string();
 
@@ -51,9 +52,7 @@ void SCV::Core::save_to_file(std::string json_path)
 
 void SCV::Core::init()
 {
-    // Cursor points god knows where now
     m_json_buffer.clear();
-    // Cursor points at the root of the json
 }
 
 void SCV::Core::place(const std::string_view block_name)
