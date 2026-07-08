@@ -33,11 +33,20 @@ int main(int argc, const char **argv)
 {
     if (argc > 1)
     {
-        std::cout << "You have provided " << argc - 1
-                  << " unnecessary arguments.\nThe Terran Dominion appreciates "
-                     "the donation but is also confused...\n";
+        if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help")
+        {
+            std::cout << helptext;
+            return 2;
+        }
+        else
+        {
+            std::cout << "You have provided " << argc - 1
+                      << " unnecessary argument" << ((argc == 2) ? "" : "s")
+                      << ".\nThe Terran Dominion appreciates "
+                         "the donation but is also confused...\n";
+        }
+        // </unfunny_joke>
     }
-    // </unfunny_joke>
 
     REBL::SCV scv;
     std::cout << "\nIssue the [h] command for help.\n";

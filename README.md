@@ -188,7 +188,7 @@ For Windows:
 
 For MacOS:
 - Install Homebrew (https://brew.sh/)
-- `brew install cmake gcc  git`
+- `brew install cmake gcc git`
 - clone repository
 - If you have XCode installed, you need to `export CC=/opt/homebrew/bin/gcc-<your_installed_gcc_version>` and `export CXX=/opt/homebrew/bin/g++-<your_installed_gcc_version>` before compiling. Otherwise cmake will find AppleClang instead, which has broken tzdb support in `<chrono>`. Check with `ls /opt/homebrew/bin/` which gcc version is installed.
 
@@ -199,3 +199,18 @@ Then on either OS:
 - You can now copy the `reblapp` (or `reblapp.exe` on Windows) wherever you want
 - Launch the `reblapp` without arguments or with `-h` to get the documentation displayed.
 - `reblapp` requires to be using a specific SQLite database format, for which a template can be generated out of `reblapp`.
+
+# scvapp
+
+The `scvapp` is an aid to create reliability block diagrams through a CLI.
+After launching, use the `help` command to print an in depth help for the usage
+of this tool.
+You can also run the `-h` or `--help` argument to only print the helptext and
+not launch `scvapp` fully.
+
+For building, use the same instructions as for `reblapp`, but replace all
+occurrences of `reblapp` with `scvapp`.
+
+Note: The `scvapp` inserts a `null` block after each join, which is optional
+when there are no early joins. However it is functionally equivalent to place
+it.
