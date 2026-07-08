@@ -121,6 +121,11 @@ target_compile_definitions(RunTests_REBL PRIVATE
 add_executable(reblapp src/REBLAPP.cpp)
 target_link_libraries(reblapp REBL)
 target_compile_features(reblapp PUBLIC cxx_std_20)
+
+add_executable(scvapp src/SCVAPP.cpp)
+target_link_libraries(scvapp SCV)
+target_compile_features(scvapp PUBLIC cxx_std_20)
+
 if(MSVC)
     # Use static CRT (/MT, /MTd)
     set_property(TARGET reblapp PROPERTY
