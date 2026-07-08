@@ -106,7 +106,9 @@ FetchContent_MakeAvailable(googletest)
 add_executable(RunTests_REBL tests/REBL_test.cpp)
 target_link_libraries(RunTests_REBL REBL GTest::gtest_main)
 target_compile_features(RunTests_REBL PUBLIC cxx_std_20)
-
+target_compile_definitions(RunTests_REBL PRIVATE
+    TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests"
+)
 
 add_executable(reblapp src/REBLAPP.cpp)
 target_link_libraries(reblapp REBL)

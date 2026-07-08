@@ -34,7 +34,7 @@ void expect_rel_near(double actual, double expected, double rel_tol)
 
 TEST(REBL, read_rbd_db)
 {
-    REBL::DB::Connection rbd_db("../tests/rbd.db");
+    REBL::DB::Connection rbd_db(std::string(TEST_DATA_DIR) + "/rbd.db");
     auto rbd = rbd_db.get_rbd();
     EXPECT_EQ(rbd.at(0), "MGCC");
     EXPECT_EQ(rbd.at(1), "Actor_(1,1)->MGCC");
@@ -121,7 +121,7 @@ std::string sort_lines_helper(std::string input)
 TEST(REBL, parse_rbd_db)
 {
     // This parses in the constructor.
-    REBL::RBD rebl("../tests/rbd.db", REBL::MCSSettings());
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd.db", REBL::MCSSettings());
     auto graph                  = rebl.get_pure_graph();
     auto graph_adjacency_string = rebl.get_graph_adjacency_string(true, true);
     std::string expected_graph_adjacency_string =
@@ -692,7 +692,7 @@ TEST(REBL_MCS, simplerbd_combinations)
     double expected_T = 7.264425076603002e-05;
     double expected_P = 1.824398989895749e-09;
 
-    REBL::RBD rebl("../tests/rbd_simple.db",
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_simple.db",
                    REBL::MCSSettings(false, 1, 2, 0.0, 0.0));
 
     auto system_result = rebl.run_minimal_cut_sets();
@@ -711,7 +711,7 @@ TEST(REBL_MCS, midsimplerbd_combinations)
     double expected_T = 0.000341986399289544;
     double expected_P = 3.4278306598756196e-05;
 
-    REBL::RBD rebl("../tests/rbd_mid_simple.db",
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
                    REBL::MCSSettings(false, 1, 5, 0.0, 0.0));
 
     auto system_result = rebl.run_minimal_cut_sets();
@@ -730,7 +730,7 @@ TEST(REBL_MCS, midsimplerbd_probability)
     double expected_T = 0.000341986399289544;
     double expected_P = 3.4278306598756196e-05;
 
-    REBL::RBD rebl("../tests/rbd_mid_simple.db",
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
                    REBL::MCSSettings(true, 0, 0, 1e-8, 1.0));
 
     auto system_result = rebl.run_minimal_cut_sets();
@@ -745,13 +745,14 @@ TEST(REBL_MCS, midsimplerbd_probability)
 
 TEST(REBL_RBD, template_dump)
 {
-    constexpr const char *db_path = "REBL_RBD_template_dump.db";
-    if (std::filesystem::exists(std::filesystem::path(db_path)))
+    auto db_path = std::string(TEST_DATA_DIR) + "/REBL_RBD_template_dump.db";
+    if (std::filesystem::exists(std::filesystem::path(db_path.c_str())))
     {
-        std::filesystem::remove(std::filesystem::path(db_path));
+        std::filesystem::remove(std::filesystem::path(db_path.c_str()));
     }
-    REBL::RBD::spawn_rbd_db_template(db_path);
-    EXPECT_TRUE(std::filesystem::exists(std::filesystem::path(db_path)));
+    REBL::RBD::spawn_rbd_db_template(db_path.c_str());
+    EXPECT_TRUE(
+        std::filesystem::exists(std::filesystem::path(db_path.c_str())));
 }
 
 TEST(SCV, random_rbd)
