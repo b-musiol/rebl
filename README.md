@@ -202,8 +202,9 @@ Then on either OS:
 
 # scvapp
 
-The `scvapp` is an aid to create reliability block diagrams through a CLI.
-After launching, use the `help` command to print an in depth help for the usage
+The `scvapp` is an aid to create reliability block diagrams through a CLI. It
+is launched without any arguments.
+After launching, use the `help` or `h` command to print an in depth help for the usage
 of this tool.
 You can also run the `-h` or `--help` argument to only print the helptext and
 not launch `scvapp` fully.
