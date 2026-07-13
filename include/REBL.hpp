@@ -61,6 +61,11 @@ class RBD
                                            bool with_component_names);
 
   public:
+    /**
+     * Changes the active RBD for the passed `rbd_json`. This assumes the
+     * components are set up correctly and re-parses instantly without writing
+     * the RBD to disk.
+     */
     void change_cached_rbd(std::string_view rbd_json);
     /**
      * Runs the Minimal Cut Sets algorithm on the RBD and saves the results
