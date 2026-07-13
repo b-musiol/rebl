@@ -47,6 +47,12 @@ struct RBD::Core
      */
     void parse_rbd();
     /**
+     * Parses the rbd from the json in `rbd_json`. Only changes the cached
+     * version, not the one on disk (the next calculation will be done with
+     * `rbd_json`).
+     */
+    void parse_rbd(std::string_view rbd_json);
+    /**
      * Recursively parses the rbd from `rbd_json` and `rbd_components` between
      * pre-created `split_node` and `join_node`.
      */

@@ -33,6 +33,15 @@ void expect_rel_near(double actual, double expected, double rel_tol)
         << "actual=" << actual << " expected=" << expected;
 }
 
+void copy_file(std::string fp_src, std::string fp_dst)
+{
+    std::ifstream src(fp_src, std::ifstream::binary);
+    std::ofstream dst(fp_dst, std::ofstream::binary);
+    dst << src.rdbuf();
+    src.close();
+    dst.close();
+}
+
 TEST(REBL, read_rbd_db)
 {
     REBL::DB::Connection rbd_db(std::string(TEST_DATA_DIR) + "/rbd.db");
@@ -693,7 +702,10 @@ TEST(REBL_MCS, simplerbd_combinations)
     double expected_T = 7.264425076603002e-05;
     double expected_P = 1.824398989895749e-09;
 
-    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_simple.db",
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_simple.db",
+              std::string(TEST_DATA_DIR) + "/rbd_simple_TEST.db");
+
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_simple_TEST.db",
                    REBL::MCSSettings(false, 1, 2, 0.0, 0.0));
 
     auto system_result = rebl.run_minimal_cut_sets();
@@ -712,7 +724,10 @@ TEST(REBL_MCS, midsimplerbd_combinations)
     double expected_T = 0.000341986399289544;
     double expected_P = 3.4278306598756196e-05;
 
-    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
+              std::string(TEST_DATA_DIR) + "/rbd_mid_simple_TEST.db");
+
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_mid_simple_TEST.db",
                    REBL::MCSSettings(false, 1, 5, 0.0, 0.0));
 
     auto system_result = rebl.run_minimal_cut_sets();
@@ -725,13 +740,61 @@ TEST(REBL_MCS, midsimplerbd_combinations)
     expect_rel_near(system_result.P(), expected_P, 1e-2);
 }
 
+TEST(REBL_MCS, midsimplerbd_to_rbd_instaswap)
+{
+    double expected_H = 0.23352823800000003;
+    double expected_T = 0.01291904159359092;
+    double expected_P = 0.00301696102;
+
+    double expected_H2 = 0.034199762;
+    double expected_T2 = 0.02985397910079023;
+    double expected_P2 = 0.00102099898;
+
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple_instaswap.db",
+              std::string(TEST_DATA_DIR) + "/rbd_mid_simple_instaswap_TEST.db");
+
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) +
+                       "/rbd_mid_simple_instaswap_TEST.db",
+                   REBL::MCSSettings(false, 1, 2, 0.0, 0.0));
+
+    auto system_result = rebl.run_minimal_cut_sets();
+    std::cout << "H:" << system_result.H() << " 1/a \n";
+    std::cout << "T:" << system_result.T() << " a\n";
+    std::cout << "P:" << system_result.P() << " * 100%\n";
+    // std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
+    expect_rel_near(system_result.H(), expected_H, 1e-2);
+    expect_rel_near(system_result.T(), expected_T, 1e-2);
+    expect_rel_near(system_result.P(), expected_P, 1e-2);
+
+    std::string new_rbd = R"json(
+    [
+        ["b"], ["c"], "a"
+    ]
+    )json";
+
+    rebl.change_cached_rbd(new_rbd);
+
+    auto system_result2 = rebl.run_minimal_cut_sets();
+    std::cout << "H:" << system_result2.H() << " 1/a \n";
+    std::cout << "T:" << system_result2.T() << " a\n";
+    std::cout << "P:" << system_result2.P() << " * 100%\n";
+
+    expect_rel_near(system_result2.H(), expected_H2, 1e-2);
+    expect_rel_near(system_result2.T(), expected_T2, 1e-2);
+    expect_rel_near(system_result2.P(), expected_P2, 1e-2);
+}
+
 TEST(REBL_MCS, midsimplerbd_probability)
 {
     double expected_H = 0.1002329527430544;
     double expected_T = 0.000341986399289544;
     double expected_P = 3.4278306598756196e-05;
 
-    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
+              std::string(TEST_DATA_DIR) +
+                  "/rbd_midsimplerbd_probability_TEST.db");
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) +
+                       "/rbd_midsimplerbd_probability_TEST.db",
                    REBL::MCSSettings(true, 0, 0, 1e-8, 1.0));
 
     auto system_result = rebl.run_minimal_cut_sets();
@@ -746,7 +809,8 @@ TEST(REBL_MCS, midsimplerbd_probability)
 
 TEST(REBL_RBD, template_dump)
 {
-    auto db_path = std::string(TEST_DATA_DIR) + "/REBL_RBD_template_dump.db";
+    auto db_path =
+        std::string(TEST_DATA_DIR) + "/REBL_RBD_template_dump_TEST.db";
     if (std::filesystem::exists(std::filesystem::path(db_path.c_str())))
     {
         std::filesystem::remove(std::filesystem::path(db_path.c_str()));

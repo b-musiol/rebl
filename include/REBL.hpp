@@ -24,7 +24,21 @@ namespace REBL
 class RBD
 {
   public:
-    RBD(const std::string_view rbd_db_path, const MCSSettings &mcs_settings);
+    /**
+     * Opens a new REBL RBD object with a SQLite Database at `rbd_db_path`. (If
+     * you don't have one, spawn a template with `spawn_rbd_db_template()`.
+     *
+     * Initializes the calculation parameters with `mcs_settings`.
+     *
+     * Per default `parse_from_disk` is set to `true`, meaning that the entry
+     * `rbd` in table `input_rbd` is read and parsed as the RBD to be executed
+     * calculations on. If you do not wish to do that (e.g. for running in a
+     * degree of a cached mode), set this to false. Then you have to supply
+     * your own RBD-JSON string.
+     */
+    RBD(const std::string_view rbd_db_path,
+        const MCSSettings &mcs_settings,
+        bool parse_from_disk = true);
     ~RBD();
 
   public:
@@ -47,6 +61,7 @@ class RBD
                                            bool with_component_names);
 
   public:
+    void change_cached_rbd(std::string_view rbd_json);
     /**
      * Runs the Minimal Cut Sets algorithm on the RBD and saves the results
      */

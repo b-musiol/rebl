@@ -34,6 +34,8 @@ RBD::Core::~Core()
 
 void RBD::Core::parse_rbd()
 {
+    id_dropper = Ticket(1);
+    component_instance_map.clear();
     // first get the data from the db
     auto rbd_json       = rbd_db.get_rbd();
     auto rbd_components = rbd_db.get_rbd_components();
@@ -51,6 +53,32 @@ void RBD::Core::parse_rbd()
     // back.
 
     parse_rbd_core(rbd_json, rbd_components, start_point_id, end_point_id);
+}
+
+void RBD::Core::parse_rbd(std::string_view rbd_json)
+{
+    id_dropper = Ticket(1);
+    component_instance_map.clear();
+    // first get the data from the db
+    auto rbd_json_object = rbd_db.get_rbd(rbd_json);
+    auto rbd_components  = rbd_db.get_rbd_components();
+
+    // Reset the inner graph.
+    rbd->clear();
+
+    // Define the outer start and end point
+    start_point_id = id_dropper.pull();
+    end_point_id   = id_dropper.pull();
+    // Add these as nodes into the rbd
+    rbd->add_node(start_point_id);
+    rbd->add_node(end_point_id);
+    // The start point remains constant, but the end point keeps being pushed
+    // back.
+
+    parse_rbd_core(rbd_json_object,
+                   rbd_components,
+                   start_point_id,
+                   end_point_id);
 }
 
 void RBD::Core::parse_rbd_core(

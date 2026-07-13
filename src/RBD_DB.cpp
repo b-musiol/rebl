@@ -29,6 +29,12 @@ nlohmann::json DB::Connection::get_rbd()
     auto rbd_json = nlohmann::json::parse(raw_rbd_json);
     return rbd_json;
 }
+nlohmann::json DB::Connection::get_rbd(std::string_view rbd_json_string)
+{
+    raw_rbd_json  = rbd_json_string;
+    auto rbd_json = nlohmann::json::parse(raw_rbd_json);
+    return rbd_json;
+}
 
 std::string DB::Connection::get_rbd_raw_json()
 {

@@ -14,6 +14,8 @@
 #include <Litesaver.hpp>
 #include <filesystem>
 #include <nlohmann/json.hpp>
+#include <string>
+#include <string_view>
 
 namespace REBL
 {
@@ -35,6 +37,10 @@ class Connection : public Litesaver::Base
      * Gets the rbd JSON from the database.
      */
     nlohmann::json get_rbd();
+    /**
+     * Gets the rbd JSON from a string. This also stores it in `raw_rbd_json`.
+     */
+    nlohmann::json get_rbd(std::string_view rbd_json_string);
     /**
      * Gets the last rbd that has been read in as JSON-String. You must call
      * get_rbd() first, or this is not updated.

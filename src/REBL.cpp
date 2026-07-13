@@ -12,14 +12,22 @@
 
 using namespace REBL;
 
-RBD::RBD(const std::string_view rbd_db_path, const MCSSettings &mcs_settings)
+RBD::RBD(const std::string_view rbd_db_path,
+         const MCSSettings &mcs_settings,
+         bool parse_from_disk)
     : core(std::make_unique<Core>(rbd_db_path, mcs_settings))
 {
-    core->parse_rbd();
+    if (parse_from_disk)
+        core->parse_rbd();
 }
 
 RBD::~RBD()
 {
+}
+
+void RBD::change_cached_rbd(std::string_view rbd_json)
+{
+    core->parse_rbd(rbd_json);
 }
 
 KnoKan::
