@@ -45,6 +45,7 @@ constexpr const char *insert_into_output_result_summary = R"sql(
 INSERT INTO "output_result_summary"
 (
     "run_id",
+    "rbd",
     "ok",
     "H",
     "T",
@@ -55,7 +56,7 @@ INSERT INTO "output_result_summary"
     "max_probability"
 )
 VALUES
-(?,?,?,?,?,?,?,?,?);
+(?,?,?,?,?,?,?,?,?,?);
 )sql";
 
 constexpr const char *update_output_result_summary = R"sql(

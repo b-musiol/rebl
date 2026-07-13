@@ -25,9 +25,14 @@ DB::Connection::~Connection()
 }
 nlohmann::json DB::Connection::get_rbd()
 {
-    auto raw_rbd_json = std::get<std::string>(get_input_unique("rbd", "rbd"));
-    auto rbd_json     = nlohmann::json::parse(raw_rbd_json);
+    raw_rbd_json  = std::get<std::string>(get_input_unique("rbd", "rbd"));
+    auto rbd_json = nlohmann::json::parse(raw_rbd_json);
     return rbd_json;
+}
+
+std::string DB::Connection::get_rbd_raw_json()
+{
+    return raw_rbd_json;
 }
 
 std::unordered_map<std::string, Kochs::Object> DB::Connection::
@@ -251,6 +256,8 @@ Generally, if strings (if across the rbd the same string appears multiple times,
 
     constexpr const char *help_output_result_fc_run_id =
         R"_helptext_(ID of the calculation run)_helptext_";
+    constexpr const char *help_output_result_summary_rbd =
+        R"_helptext_(JSON representation of the RBD calculated)_helptext_";
     constexpr const char *help_output_result_fc_fc_id =
         R"_helptext_(ID of the failure combination, only valid within a run.)_helptext_";
     constexpr const char *help_output_result_fc_H =
@@ -271,6 +278,7 @@ Generally, if strings (if across the rbd the same string appears multiple times,
     Litesaver::TableConfig output_config;
     output_config["result_summary"] = {
         {{"run_id", {ValType::INTEGER, help_output_result_summary_run_id}},
+         {"rbd", {ValType::FLOAT, help_output_result_summary_rbd}},
          {"ok", {ValType::FLOAT, help_output_result_summary_ok}},
          {"H", {ValType::FLOAT, help_output_result_summary_H}},
          {"T", {ValType::FLOAT, help_output_result_summary_T}},

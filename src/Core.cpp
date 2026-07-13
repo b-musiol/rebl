@@ -206,6 +206,7 @@ Kochs::Object RBD::Core::run_mcs_and_save()
     SQLiteDB::Row params_insert_result_summary =
         make_params_insert_result_summary_row(
             run_id,
+            rbd_db.get_rbd_raw_json(),
             false,
             0.0,
             0.0,
@@ -360,6 +361,7 @@ unsigned int RBD::Core::get_next_run_id()
 
 SQLiteDB::Row RBD::Core::make_params_insert_result_summary_row(
     unsigned int run_id,
+    std::string rbd_json,
     bool ok,
     double H,
     double T,
@@ -373,6 +375,7 @@ SQLiteDB::Row RBD::Core::make_params_insert_result_summary_row(
     SQLiteDB::Row row;
 
     row.push_integer(run_id);
+    row.push_text(rbd_json);
     row.push_integer(ok);
     row.push_real(H);
     row.push_real(T);

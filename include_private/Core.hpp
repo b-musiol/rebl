@@ -75,6 +75,7 @@ struct RBD::Core
     unsigned int get_next_run_id();
     SQLiteDB::Row make_params_insert_result_summary_row(
         unsigned int run_id,
+        std::string rbd_json,
         bool ok,
         double H,
         double T,
