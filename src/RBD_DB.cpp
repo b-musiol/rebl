@@ -9,6 +9,7 @@
 
 #include "../include_private/RBD_DB.hpp"
 #include "Kochs.hpp"
+#include "rbd_db_queries.hpp"
 #include <Litesaver.hpp>
 #include <format>
 #include <stdexcept>
@@ -318,4 +319,73 @@ Generally, if strings (if across the rbd the same string appears multiple times,
         false};
 
     Litesaver::Base template_db(db_path, input_config, output_config);
+}
+
+size_t DB::Connection::get_next_free_run_id()
+{
+    auto run_id_raw = direct_read_access(DB::Query::select_largest_run_id);
+    // Only accept positive run ids starting with 1
+    if (run_id_raw.data.size() > 0 && run_id_raw.data.front().is_integer(0))
+    {
+        return std::max(run_id_raw.data.front().get_integer(0) + 1,
+                        static_cast<std::int64_t>(1));
+    }
+    else
+    {
+        return 1;
+    }
+}
+
+std::vector<SQLiteDB::Row> DB::Connection::get_output_detail_fc_runid_offset(
+    long long offset)
+{
+    auto raw_data = direct_read_access(DB::Query::select_all_output_detail_fc);
+    for (auto &row : raw_data.data)
+    {
+        row.set_integer(DB::Query::run_id_output_detail_fc_ix,
+                        row.get_integer(DB::Query::run_id_output_detail_fc_ix) +
+                            offset);
+    }
+    return raw_data.data;
+}
+
+std::vector<SQLiteDB::Row> DB::Connection::get_output_result_fc_runid_offset(
+    long long offset)
+{
+    auto raw_data = direct_read_access(DB::Query::select_all_output_result_fc);
+    for (auto &row : raw_data.data)
+    {
+        row.set_integer(DB::Query::run_id_output_result_fc_ix,
+                        row.get_integer(DB::Query::run_id_output_result_fc_ix) +
+                            offset);
+    }
+    return raw_data.data;
+}
+
+std::vector<SQLiteDB::Row> DB::Connection::
+    get_output_result_summary_runid_offset(long long offset)
+{
+    auto raw_data =
+        direct_read_access(DB::Query::select_all_output_result_summary);
+    for (auto &row : raw_data.data)
+    {
+        row.set_integer(
+            DB::Query::run_id_output_result_summary_ix,
+            row.get_integer(DB::Query::run_id_output_result_summary_ix) +
+                offset);
+    }
+    return raw_data.data;
+}
+
+void DB::Connection::insert_output_data(
+    const std::vector<SQLiteDB::Row> &output_detail_fc,
+    const std::vector<SQLiteDB::Row> &output_result_fc,
+    const std::vector<SQLiteDB::Row> &output_result_summary)
+{
+    direct_write_access(DB::Query::insert_into_output_detail_fc,
+                        output_detail_fc);
+    direct_write_access(DB::Query::insert_into_output_result_fc,
+                        output_result_fc);
+    direct_write_access(DB::Query::insert_into_output_result_summary,
+                        output_result_summary);
 }

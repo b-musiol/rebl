@@ -8,6 +8,8 @@
 #include "../include/REBL.hpp"
 #include "../include_private/Core.hpp"
 #include <Litesaver.hpp>
+#include <filesystem>
+#include <iostream>
 #include <sstream>
 
 using namespace REBL;
@@ -116,4 +118,11 @@ Kochs::Object RBD::run_minimal_cut_sets()
 void RBD::spawn_rbd_db_template(std::filesystem::path db_path)
 {
     RBD::Core::spawn_rbd_db_template(db_path);
+}
+
+void RBD::merge_output(const std::filesystem::path &output_db_path,
+                       const std::vector<std::filesystem::path> &input_db_paths,
+                       size_t ix_main_input_db)
+{
+    RBD::Core::merge_output(output_db_path, input_db_paths, ix_main_input_db);
 }

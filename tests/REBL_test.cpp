@@ -14,6 +14,7 @@
 #include "../include/SCV.hpp"
 #include "../include_private/FC.hpp"
 #include "../include_private/RBD_DB.hpp"
+#include "SQLiteDB.hpp"
 #include <filesystem>
 #include <gtest/gtest.h>
 
@@ -33,13 +34,31 @@ void expect_rel_near(double actual, double expected, double rel_tol)
         << "actual=" << actual << " expected=" << expected;
 }
 
-void copy_file(std::string fp_src, std::string fp_dst)
+void copy_file(const std::string &fp_src, const std::string &fp_dst)
 {
-    std::ifstream src(fp_src, std::ifstream::binary);
-    std::ofstream dst(fp_dst, std::ofstream::binary);
+    std::ifstream src(fp_src, std::ios::binary);
+    if (!src)
+    {
+        throw std::runtime_error("Failed to open source: " + fp_src);
+    }
+
+    std::ofstream dst(fp_dst, std::ios::binary);
+    if (!dst)
+    {
+        throw std::runtime_error("Failed to open destination: " + fp_dst);
+    }
+
     dst << src.rdbuf();
-    src.close();
-    dst.close();
+
+    if (!src.good() && !src.eof())
+    {
+        throw std::runtime_error("Error reading source: " + fp_src);
+    }
+
+    if (!dst)
+    {
+        throw std::runtime_error("Error writing destination: " + fp_dst);
+    }
 }
 
 TEST(REBL, read_rbd_db)
@@ -818,6 +837,48 @@ TEST(REBL_RBD, template_dump)
     REBL::RBD::spawn_rbd_db_template(db_path.c_str());
     EXPECT_TRUE(
         std::filesystem::exists(std::filesystem::path(db_path.c_str())));
+}
+
+TEST(REBL_merge, merge)
+{
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_merge_main.db",
+              std::string(TEST_DATA_DIR) + "/rbd_merge_main_TEST.db");
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_merge_sub1.db",
+              std::string(TEST_DATA_DIR) + "/rbd_merge_sub1_TEST.db");
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_merge_sub2.db",
+              std::string(TEST_DATA_DIR) + "/rbd_merge_sub2_TEST.db");
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_merge_sub3.db",
+              std::string(TEST_DATA_DIR) + "/rbd_merge_sub3_TEST.db");
+
+    {
+        REBL::RBD::merge_output(
+            std::string(TEST_DATA_DIR) + "/rbd_merged_TEST.db",
+            {std::string(TEST_DATA_DIR) + "/rbd_merge_sub1_TEST.db",
+             std::string(TEST_DATA_DIR) + "/rbd_merge_sub2_TEST.db",
+             std::string(TEST_DATA_DIR) + "/rbd_merge_sub3_TEST.db",
+             std::string(TEST_DATA_DIR) + "/rbd_merge_main_TEST.db"},
+            3);
+    }
+
+    // {
+    //     REBL::RBD rbd(std::string(TEST_DATA_DIR) + "/rbd_merge_main_TEST.db",
+    //                   REBL::MCSSettings(true, 0, 0, 1e-8, 1.0),
+    //                   true);
+    // }
+    {
+        SQLiteDB::Database db(std::string(TEST_DATA_DIR) +
+                                  "/rbd_merged_TEST.db",
+                              false);
+        auto tb_summary_size = db.execute_statement_returns(
+            "SELECT COUNT(*) FROM output_result_summary;");
+        EXPECT_EQ(7, tb_summary_size.data.at(0).get_integer(0));
+        auto tb_detail_fc_size = db.execute_statement_returns(
+            "SELECT COUNT(*) FROM output_detail_fc;");
+        EXPECT_EQ(162, tb_detail_fc_size.data.at(0).get_integer(0));
+        auto tb_result_fc_size = db.execute_statement_returns(
+            "SELECT COUNT(*) FROM output_result_fc;");
+        EXPECT_EQ(84, tb_result_fc_size.data.at(0).get_integer(0));
+    }
 }
 
 TEST(SCV, random_rbd)

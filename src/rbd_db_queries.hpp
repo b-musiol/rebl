@@ -59,6 +59,43 @@ VALUES
 (?,?,?,?,?,?,?,?,?,?);
 )sql";
 
+constexpr int run_id_output_detail_fc_ix          = 0;
+constexpr const char *select_all_output_detail_fc = R"sql(
+SELECT
+    "fc_id",
+    "run_id",
+    "H",
+    "T",
+    "component"
+FROM "output_detail_fc";
+)sql";
+
+constexpr int run_id_output_result_fc_ix          = 1;
+constexpr const char *select_all_output_result_fc = R"sql(
+SELECT
+    "fc_id",
+    "run_id",
+    "H",
+    "T"
+FROM "output_result_fc";
+)sql";
+
+constexpr int run_id_output_result_summary_ix          = 0;
+constexpr const char *select_all_output_result_summary = R"sql(
+SELECT
+    "run_id",
+    "rbd",
+    "ok",
+    "H",
+    "T",
+    "use_probability",
+    "min_combination_size",
+    "max_combination_size",
+    "min_probability",
+    "max_probability"
+FROM "output_result_summary";
+)sql";
+
 constexpr const char *update_output_result_summary = R"sql(
 UPDATE "output_result_summary"
 SET 

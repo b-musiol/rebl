@@ -51,6 +51,39 @@ class Connection : public Litesaver::Base
      */
     std::unordered_map<std::string, Kochs::Object> get_rbd_components();
 
+    /**
+     * Gets the currently highest used run_id in the output tables (taken from
+     * the summary)
+     */
+    size_t get_next_free_run_id();
+    /**
+     * Gets all data from `output_detail_fc`, but offsets the run_id by
+     * `offset`.
+     */
+    std::vector<SQLiteDB::Row> get_output_detail_fc_runid_offset(
+        long long offset);
+    /**
+     * Gets all data from `output_result_fc`, but offsets the run_id by
+     * `offset`.
+     */
+    std::vector<SQLiteDB::Row> get_output_result_fc_runid_offset(
+        long long offset);
+    /**
+     * Gets all data from `output_result_summary`, but offsets the run_id by
+     * `offset`.
+     */
+    std::vector<SQLiteDB::Row> get_output_result_summary_runid_offset(
+        long long offset);
+    /**
+     * Appends `output_detail_fc`, `output_result_fc`, `output_result_summary`
+     * to the corresponding tables. You must make sure the run_ids are not
+     * duplicated yourself.
+     */
+    void insert_output_data(
+        const std::vector<SQLiteDB::Row> &output_detail_fc,
+        const std::vector<SQLiteDB::Row> &output_result_fc,
+        const std::vector<SQLiteDB::Row> &output_result_summary);
+
   public:
     static void spawn_rbd_db_template(std::filesystem::path db_path);
 };

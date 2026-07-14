@@ -77,6 +77,16 @@ struct RBD::Core
      */
     static void spawn_rbd_db_template(std::filesystem::path db_path);
 
+    /**
+     * Merges all outputs from the `input_db_paths` into `output_db_path`. This
+     * preserves all other tables from the input db at `ix_main_input_db` in the
+     * `input_db_paths` vector. In turn, the resulting db is compatible with
+     * REBL again.*/
+    static void merge_output(
+        const std::filesystem::path &output_db_path,
+        const std::vector<std::filesystem::path> &input_db_paths,
+        size_t ix_main_input_db);
+
   private:
     unsigned int get_next_run_id();
     SQLiteDB::Row make_params_insert_result_summary_row(

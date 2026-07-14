@@ -11,6 +11,7 @@
 #include "algorithms/DFS.hpp"
 #include "rbd_db_queries.hpp"
 #include <Kochs.hpp>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -373,18 +374,7 @@ Kochs::Object RBD::Core::run_mcs_and_save()
 
 unsigned int RBD::Core::get_next_run_id()
 {
-    auto run_id_raw =
-        rbd_db.direct_read_access(DB::Query::select_largest_run_id);
-    // Only accept positive run ids starting with 1
-    if (run_id_raw.data.size() > 0 && run_id_raw.data.front().is_integer(0))
-    {
-        return std::max(run_id_raw.data.front().get_integer(0) + 1,
-                        static_cast<std::int64_t>(1));
-    }
-    else
-    {
-        return 1;
-    }
+    return static_cast<unsigned int>(rbd_db.get_next_free_run_id());
 }
 
 SQLiteDB::Row RBD::Core::make_params_insert_result_summary_row(
@@ -467,4 +457,118 @@ SQLiteDB::Row RBD::Core::make_params_insert_detail_fc_row(unsigned int fc_id,
 void RBD::Core::spawn_rbd_db_template(std::filesystem::path db_path)
 {
     DB::Connection::spawn_rbd_db_template(db_path);
+}
+
+void RBD::Core::merge_output(
+    const std::filesystem::path &output_db_path,
+    const std::vector<std::filesystem::path> &input_db_paths,
+    size_t ix_main_input_db)
+{
+    // Edge case of empty input_db_paths
+    if (input_db_paths.empty())
+    {
+        std::cerr << "No input db paths given. Nothing to merge. No output "
+                     "file created!\n";
+        return;
+    }
+
+    // Check if `ix_main_input_db` is even legit
+    if (ix_main_input_db >= input_db_paths.size())
+    {
+        std::cerr
+            << "Not merging outputs!\n"
+            << "ix_main_input_db: " << ix_main_input_db << "\n"
+            << "input_db_paths.size(): " << input_db_paths.size() << "\n"
+            << "Requested main db index (ix_main_input_db) is out of bounds.\n";
+        return;
+    }
+
+    // Check if output is mistakenly a directory
+    if (std::filesystem::is_directory(output_db_path))
+    {
+        std::cerr << "Not merging outputs!\n"
+                  << "output_db_path: " << output_db_path << "\n"
+                  << "Given output path is directory!\n";
+        return;
+    }
+
+    // Check if the output must be cleared first
+    if (std::filesystem::exists(output_db_path))
+    {
+        std::cerr << "Warning: output file exists. It will now be deleted.\n";
+        std::filesystem::remove(output_db_path);
+    }
+
+    // Check if all input files pointed to exist
+    bool all_input_files_exist = true;
+    for (const auto &input_db_path : input_db_paths)
+    {
+        if (!std::filesystem::exists(input_db_path))
+        {
+            std::cerr << "Error: Input file does not exist!\n";
+            std::filesystem::remove(input_db_path);
+            all_input_files_exist = false;
+        }
+    }
+    if (!all_input_files_exist)
+    {
+        std::cerr << "Not merging outputs!\n";
+        return;
+    }
+
+    // At this point the only thing that can go wrong is that the files pointed
+    // to are neither SQLite files nor in the correct REBL format.
+
+    //***Merging Algorithm Start */
+
+    // Copy the main input to the output. This is the starting point.
+    // Remove the main input from the input vector
+    std::vector<std::filesystem::path> ref_db_paths;
+    for (size_t ix = 0; ix < input_db_paths.size(); ix++)
+    {
+        const auto &input_db_path = input_db_paths.at(ix);
+        if (ix == ix_main_input_db)
+        {
+            // main ref
+            // copy this
+            std::filesystem::copy_file(input_db_path, output_db_path);
+        }
+        else
+        {
+            // Any subordinate ref
+            // Build a new vector as a "todo-list" for the merging
+            ref_db_paths.push_back(input_db_path);
+        }
+    }
+
+    // Get the max `run_id` from the main ref
+    {
+        DB::Connection db_main(output_db_path);
+        size_t next_free_run_id = db_main.get_next_free_run_id();
+
+        // Loop through the todo list and append the outputs, but take care of
+        // the indices
+        for (const auto &ref_db_path : ref_db_paths)
+        {
+            // Get the rows `output_detail_fc` `output_result_fc`
+            // `output_result_summary` and offset the run_id by the current
+            // max_run_id
+            DB::Connection db_ref(ref_db_path);
+            size_t ref_max_run_id = db_ref.get_next_free_run_id() - 1;
+
+            auto output_detail_fc = db_ref.get_output_detail_fc_runid_offset(
+                static_cast<long long>(next_free_run_id));
+            auto output_result_fc = db_ref.get_output_result_fc_runid_offset(
+                static_cast<long long>(next_free_run_id));
+            auto output_result_summary =
+                db_ref.get_output_result_summary_runid_offset(
+                    static_cast<long long>(next_free_run_id));
+
+            db_main.insert_output_data(output_detail_fc,
+                                       output_result_fc,
+                                       output_result_summary);
+
+            next_free_run_id += ref_max_run_id;
+        }
+    }
 }
