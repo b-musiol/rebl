@@ -19,6 +19,7 @@ SYNOPSIS
     REBL [-hmt]
          [--use-probability]
          [-f rbd_db_path]
+         [-M rbd_db_path_main <rbd_db_path_sub1> <rbd_db_path_sub2> ...]
          [--min-probability min_probability] [--max-probability max_probability]
          [--min-combination min_combination] [--max-combination max_combination]
          
@@ -39,7 +40,14 @@ DESCRIPTION
     -f rbd_db_path  Points to the file at rbd_db_path. If with -m, the file is 
                     read and the algorithm is executed, writing the results 
                     into the file as a new run. If with -t a template rbd_db 
-                    is written there.
+                    is written there. If with -M the merge result is written 
+                    there.
+
+    
+    -M rbd_db_path_main <rbd_db_path_sub1> <rbd_db_path_sub2> ...
+              Merges all given rbd_db_paths with rbd_db_path_main retaining its
+              input tables. -M requires the -f flag for the output DB.
+              rbd_db_path_main and rbd_db_path_sub* table data is not modified.
 
 
     --min-probability min_probability  Value between 0.0 and 1.0. Must be lower
