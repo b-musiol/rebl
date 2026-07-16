@@ -591,3 +591,12 @@ void RBD::Core::add_component_type(std::string_view name,
 
 void RBD::Core::remove_component_type(std::string_view name)
 { rbd_db.remove_component_type_nofail(name); }
+
+void RBD::Core::change_h_factor(double h_factor)
+{ rbd_db.change_h_factor(h_factor); }
+
+void RBD::Core::change_t_factor(double t_factor)
+{ rbd_db.change_t_factor(t_factor); }
+
+void RBD::Core::change_length_factor(double length_factor)
+{ rbd_db.change_length_factor(length_factor); }

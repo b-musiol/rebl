@@ -22,7 +22,7 @@ RBD::RBD(const std::string_view rbd_db_path,
     if (parse_from_disk) core->parse_rbd();
 }
 
-RBD::~RBD() {}
+RBD::~RBD() = default;
 
 void RBD::change_cached_rbd(std::string_view rbd_json)
 { core->parse_rbd(rbd_json); }
@@ -123,3 +123,10 @@ void RBD::add_component_type(std::string_view name,
 
 void RBD::remove_component_type(std::string_view name)
 { core->remove_component_type(name); }
+
+void RBD::change_h_factor(double h_factor) { core->change_h_factor(h_factor); }
+
+void RBD::change_t_factor(double t_factor) { core->change_t_factor(t_factor); }
+
+void RBD::change_length_factor(double length_factor)
+{ core->change_length_factor(length_factor); }

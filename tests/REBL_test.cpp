@@ -925,6 +925,20 @@ TEST(REBL, remove_component)
     rebl.remove_component_type("testtype");
 }
 
+TEST(REBL, factors_update)
+{
+
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
+              std::string(TEST_DATA_DIR) + "/rbd_factors_update_TEST.db");
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_factors_update_TEST.db",
+                   REBL::MCSSettings(true, 0, 0, 1e-8, 1.0),
+                   false);
+
+    rebl.change_h_factor(47.11);
+    rebl.change_t_factor(0.815);
+    rebl.change_length_factor(19.48);
+}
+
 TEST(SCV, random_rbd)
 {
     std::string jsn;

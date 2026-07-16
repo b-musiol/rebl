@@ -132,6 +132,13 @@ SET
 WHERE
     "run_id" = ?;
 )sql";
+
+constexpr const char *update_input_rbd_real = R"sql(
+UPDATE "input_rbd"
+SET "valFloat" = ?
+WHERE "key" = ?;
+)sql";
+
 } // namespace Query
 } // namespace DB
 } // namespace REBL

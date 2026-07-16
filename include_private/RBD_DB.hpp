@@ -113,6 +113,10 @@ class Connection : public Litesaver::Base
     void add_component_type(std::string_view name, double h, double t);
     void remove_component_type_nofail(std::string_view name);
 
+    void change_h_factor(double h_factor);
+    void change_t_factor(double t_factor);
+    void change_length_factor(double length_factor);
+
   public:
     static void spawn_rbd_db_template(std::filesystem::path db_path);
 };

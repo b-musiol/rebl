@@ -105,6 +105,11 @@ class RBD
     void remove_component_type(std::string_view name);
 
   public:
+    void change_h_factor(double h_factor);
+    void change_t_factor(double t_factor);
+    void change_length_factor(double length_factor);
+
+  public:
     /**
      * Spawns an empty RBD SQLite Database template at `db_path` which can be
      * filled with an RBD and associated data.

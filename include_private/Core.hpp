@@ -23,9 +23,7 @@
 #include <Ticket.hpp>
 #include <string>
 
-using namespace REBL;
-
-struct RBD::Core
+struct REBL::RBD::Core
 {
     std::unique_ptr<KnoKan::DirectedGraph<int, ComponentData, EmptyP>> rbd;
 
@@ -96,6 +94,9 @@ struct RBD::Core
     void add_component_type(std::string_view name,
                             const ComponentDataStruct::HT &data);
     void remove_component_type(std::string_view name);
+    void change_h_factor(double h_factor);
+    void change_t_factor(double t_factor);
+    void change_length_factor(double length_factor);
 
   private:
     unsigned int get_next_run_id();
@@ -103,8 +104,8 @@ struct RBD::Core
         unsigned int run_id,
         std::string rbd_json,
         bool ok,
-        double H,
-        double T,
+        double h,
+        double t,
         bool use_probability,
         unsigned int min_combination_size,
         unsigned int max_combination_size,
@@ -112,16 +113,16 @@ struct RBD::Core
         double max_probability);
     SQLiteDB::Row make_params_update_result_summary_row(unsigned int run_id,
                                                         bool ok,
-                                                        double H,
-                                                        double T);
+                                                        double h,
+                                                        double t);
     SQLiteDB::Row make_params_insert_result_fc_row(unsigned int fc_id,
                                                    unsigned int run_id,
-                                                   double H,
-                                                   double T);
+                                                   double h,
+                                                   double t);
     SQLiteDB::Row make_params_insert_detail_fc_row(unsigned int fc_id,
                                                    unsigned int run_id,
-                                                   double H,
-                                                   double T,
+                                                   double h,
+                                                   double t,
                                                    std::string component);
 };
 

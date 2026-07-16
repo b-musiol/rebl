@@ -607,3 +607,25 @@ void DB::Connection::remove_component_type_nofail(std::string_view name)
     params.push_text(name);
     direct_write_access(DB::Query::delete_from_input_component_types, params);
 }
+
+void DB::Connection::change_h_factor(double h_factor)
+{
+    SQLiteDB::Row params;
+    params.push_real(h_factor);
+    params.push_text("H_factor");
+    direct_write_access(DB::Query::update_input_rbd_real, params);
+}
+void DB::Connection::change_t_factor(double t_factor)
+{
+    SQLiteDB::Row params;
+    params.push_real(t_factor);
+    params.push_text("T_factor");
+    direct_write_access(DB::Query::update_input_rbd_real, params);
+}
+void DB::Connection::change_length_factor(double length_factor)
+{
+    SQLiteDB::Row params;
+    params.push_real(length_factor);
+    params.push_text("length_factor");
+    direct_write_access(DB::Query::update_input_rbd_real, params);
+}
