@@ -1,17 +1,25 @@
-Language: Cpp
-BasedOnStyle: Microsoft
-ColumnLimit: 80
-
-AlignConsecutiveAssignments: true
-
-BreakBeforeBraces: Custom
-BraceWrapping:
-  AfterFunction: true
-  BeforeCatch: true
-  BeforeElse: true
-
-AllowAllParametersOfDeclarationOnNextLine: false
-AllowAllArgumentsOnNextLine: false
-
-BinPackParameters: false
-BinPackArguments: false
+Language: Cpp                                                                                   
+BasedOnStyle: Microsoft                                                                         
+ColumnLimit: 80                                                                                 
+                                                                                                
+AlignConsecutiveAssignments: true                                                               
+                                                                                                
+BreakBeforeBraces: Custom                                                                       
+BraceWrapping:                                                                                  
+  AfterFunction: true                                                                           
+  BeforeCatch: true                                                                             
+  BeforeElse: true                                                                              
+                                                                                                
+AllowAllParametersOfDeclarationOnNextLine: false                                                
+AllowAllArgumentsOnNextLine: false                                                              
+                                                                                                
+BinPackParameters: false                                                                        
+BinPackArguments: false                                                                         
+                                                                                                
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse                                              
+AllowShortLoopsOnASingleLine: true                                                              
+AllowShortCaseLabelsOnASingleLine: true                                                         
+                                                                                                
+AllowShortBlocksOnASingleLine: true                                                             
+AllowShortFunctionsOnASingleLine: true                                                          
+AllowShortLambdasOnASingleLine: true
