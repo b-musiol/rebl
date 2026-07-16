@@ -16,45 +16,22 @@
 
 using namespace REBL;
 
-SCV::SCV() : m_core(std::make_unique<SCV::Core>())
-{
-}
+SCV::SCV() : m_core(std::make_unique<SCV::Core>()) {}
 
-SCV::~SCV()
-{
-}
+SCV::~SCV() = default;
 
-std::string SCV::get_json_string()
-{
-    return m_core->get_json_string();
-}
+std::string SCV::get_json_string() { return m_core->get_json_string(); }
 
 void SCV::save_to_file(std::string json_path)
-{
-    m_core->save_to_file(json_path);
-}
+{ m_core->save_to_file(json_path); }
 
-void SCV::init()
-{
-    m_core->init();
-}
+void SCV::init() { m_core->init(); }
 
 void SCV::place(const std::string_view block_name)
-{
-    m_core->place(block_name);
-}
+{ m_core->place(block_name); }
 
-void SCV::fork()
-{
-    m_core->fork();
-}
+void SCV::fork() { m_core->fork(); }
 
-void SCV::join()
-{
-    m_core->join();
-}
+void SCV::join() { m_core->join(); }
 
-void SCV::rewind()
-{
-    m_core->rewind();
-}
+void SCV::rewind() { m_core->rewind(); }

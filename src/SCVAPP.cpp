@@ -89,10 +89,7 @@ int main(int argc, const char **argv)
 
         case InputState::REWIND:
             std::cout << "Rewinding to last fork...\n";
-            if (current_fork_level > 0)
-            {
-                scv.rewind();
-            }
+            if (current_fork_level > 0) { scv.rewind(); }
             else
             {
                 std::cout
@@ -226,8 +223,8 @@ int main(int argc, const char **argv)
         break;
 
         default:
-            std::cerr << "Unimplemented input state encountered. id: " +
-                             static_cast<int>(input_state);
+            std::cerr << "Unimplemented input state encountered. id: "
+                      << static_cast<int>(input_state);
             return 1;
         }
     }

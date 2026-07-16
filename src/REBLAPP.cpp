@@ -108,23 +108,14 @@ int main(int argc, const char **argv)
                 }
                 else
                 {
-                    if (arg == "-m")
-                    {
-                        run_mcs = true;
-                    }
+                    if (arg == "-m") { run_mcs = true; }
                     else if (arg == "-M")
                     {
                         merge                  = true;
                         next_is_merge_db_paths = true;
                     }
-                    else if (arg == "-t")
-                    {
-                        output_template_db = true;
-                    }
-                    else if (arg == "-f")
-                    {
-                        next_is_rbd_db_path = true;
-                    }
+                    else if (arg == "-t") { output_template_db = true; }
+                    else if (arg == "-f") { next_is_rbd_db_path = true; }
                     else if (arg == "-h")
                     {
                         std::cout << helptext;

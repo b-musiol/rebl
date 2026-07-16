@@ -17,6 +17,8 @@
 #include <string>
 #include <string_view>
 
+#include "../include/ComponentData.hpp"
+
 namespace REBL
 {
 
@@ -83,6 +85,33 @@ class Connection : public Litesaver::Base
         const std::vector<SQLiteDB::Row> &output_detail_fc,
         const std::vector<SQLiteDB::Row> &output_result_fc,
         const std::vector<SQLiteDB::Row> &output_result_summary);
+
+  public:
+    std::vector<std::string> get_all_component_names();
+    void add_component_raw(std::string_view name,
+                           std::optional<double> h,
+                           std::optional<double> t,
+                           std::optional<double> length,
+                           std::optional<std::string_view> type_name,
+                           std::optional<bool> ideal);
+    void add_component(std::string_view name,
+                       const ComponentDataStruct::HT &data);
+    void add_component(std::string_view name, double h, double t);
+    void add_component(std::string_view name,
+                       const ComponentDataStruct::HTLength &data);
+    void add_component(std::string_view name,
+                       double h,
+                       double t,
+                       double length);
+    void add_component(std::string_view name, ComponentDataStruct::Ideal data);
+    void add_component(std::string_view name);
+    void add_component(std::string_view name, std::string_view type_name);
+    void remove_component_nofail(std::string_view name);
+    std::vector<std::string> get_all_component_type_names();
+    void add_component_type(std::string_view name,
+                            const ComponentDataStruct::HT &data);
+    void add_component_type(std::string_view name, double h, double t);
+    void remove_component_type_nofail(std::string_view name);
 
   public:
     static void spawn_rbd_db_template(std::filesystem::path db_path);

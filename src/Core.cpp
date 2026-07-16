@@ -11,6 +11,7 @@
 #include "algorithms/DFS.hpp"
 #include "rbd_db_queries.hpp"
 #include <Kochs.hpp>
+#include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -29,9 +30,7 @@ RBD::Core::Core(const std::string_view rbd_db_path,
 {
 }
 
-RBD::Core::~Core()
-{
-}
+RBD::Core::~Core() = default;
 
 void RBD::Core::parse_rbd()
 {
@@ -201,7 +200,7 @@ std::optional<std::string> RBD::Core::find_component_name(
 {
     for (const auto &[name, vec] : component_instance_map)
     {
-        if (std::find(vec.begin(), vec.end(), component_instance) != vec.end())
+        if (std::ranges::find(vec, component_instance) != vec.end())
             return name;
     }
 
@@ -373,16 +372,14 @@ Kochs::Object RBD::Core::run_mcs_and_save()
 }
 
 unsigned int RBD::Core::get_next_run_id()
-{
-    return static_cast<unsigned int>(rbd_db.get_next_free_run_id());
-}
+{ return static_cast<unsigned int>(rbd_db.get_next_free_run_id()); }
 
 SQLiteDB::Row RBD::Core::make_params_insert_result_summary_row(
     unsigned int run_id,
     std::string rbd_json,
     bool ok,
-    double H,
-    double T,
+    double h,
+    double t,
     bool use_probability,
     unsigned int min_combination_size,
     unsigned int max_combination_size,
@@ -395,8 +392,8 @@ SQLiteDB::Row RBD::Core::make_params_insert_result_summary_row(
     row.push_integer(run_id);
     row.push_text(rbd_json);
     row.push_integer(ok);
-    row.push_real(H);
-    row.push_real(T);
+    row.push_real(h);
+    row.push_real(t);
     row.push_integer(use_probability);
     row.push_integer(min_combination_size);
     row.push_integer(max_combination_size);
@@ -408,38 +405,38 @@ SQLiteDB::Row RBD::Core::make_params_insert_result_summary_row(
 SQLiteDB::Row RBD::Core::make_params_update_result_summary_row(
     unsigned int run_id,
     bool ok,
-    double H,
-    double T)
+    double h,
+    double t)
 {
     // see REBL::DB::Query::update_output_result_summary
     SQLiteDB::Row row;
 
     row.push_integer(ok);
-    row.push_real(H);
-    row.push_real(T);
+    row.push_real(h);
+    row.push_real(t);
     row.push_integer(run_id);
 
     return row;
 }
 SQLiteDB::Row RBD::Core::make_params_insert_result_fc_row(unsigned int fc_id,
                                                           unsigned int run_id,
-                                                          double H,
-                                                          double T)
+                                                          double h,
+                                                          double t)
 {
     // see REBL::DB::Query::insert_into_output_result_fc
     SQLiteDB::Row row;
 
     row.push_integer(fc_id);
     row.push_integer(run_id);
-    row.push_real(H);
-    row.push_real(T);
+    row.push_real(h);
+    row.push_real(t);
 
     return row;
 }
 SQLiteDB::Row RBD::Core::make_params_insert_detail_fc_row(unsigned int fc_id,
                                                           unsigned int run_id,
-                                                          double H,
-                                                          double T,
+                                                          double h,
+                                                          double t,
                                                           std::string component)
 {
     // see REBL::DB::Query::insert_into_output_detail_fc
@@ -447,17 +444,15 @@ SQLiteDB::Row RBD::Core::make_params_insert_detail_fc_row(unsigned int fc_id,
 
     row.push_integer(fc_id);
     row.push_integer(run_id);
-    row.push_real(H);
-    row.push_real(T);
+    row.push_real(h);
+    row.push_real(t);
     row.push_text(component);
 
     return row;
 }
 
 void RBD::Core::spawn_rbd_db_template(std::filesystem::path db_path)
-{
-    DB::Connection::spawn_rbd_db_template(db_path);
-}
+{ DB::Connection::spawn_rbd_db_template(db_path); }
 
 void RBD::Core::merge_output(
     const std::filesystem::path &output_db_path,
@@ -572,3 +567,27 @@ void RBD::Core::merge_output(
         }
     }
 }
+
+std::vector<std::string> RBD::Core::get_all_component_names()
+{ return rbd_db.get_all_component_names(); }
+
+void RBD::Core::add_component(std::string_view name,
+                              const ComponentDataStruct::DataVariants &data)
+{
+    std::visit(
+        [this, name](auto &&value) { rbd_db.add_component(name, value); },
+        data);
+}
+
+void RBD::Core::remove_component(std::string_view name)
+{ rbd_db.remove_component_nofail(name); }
+
+std::vector<std::string> RBD::Core::get_all_component_type_names()
+{ return rbd_db.get_all_component_type_names(); }
+
+void RBD::Core::add_component_type(std::string_view name,
+                                   const ComponentDataStruct::HT &data)
+{ rbd_db.add_component_type(name, data); }
+
+void RBD::Core::remove_component_type(std::string_view name)
+{ rbd_db.remove_component_type_nofail(name); }

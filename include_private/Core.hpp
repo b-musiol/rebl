@@ -87,6 +87,16 @@ struct RBD::Core
         const std::vector<std::filesystem::path> &input_db_paths,
         size_t ix_main_input_db);
 
+    std::vector<std::string> get_all_component_names();
+    void add_component(std::string_view name,
+                       const ComponentDataStruct::DataVariants &data);
+    void remove_component(std::string_view name);
+
+    std::vector<std::string> get_all_component_type_names();
+    void add_component_type(std::string_view name,
+                            const ComponentDataStruct::HT &data);
+    void remove_component_type(std::string_view name);
+
   private:
     unsigned int get_next_run_id();
     SQLiteDB::Row make_params_insert_result_summary_row(

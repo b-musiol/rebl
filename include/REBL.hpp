@@ -74,6 +74,38 @@ class RBD
 
   public:
     /**
+     * Gets all component names from the input_components table.
+     */
+    std::vector<std::string> get_all_component_names();
+    /**
+     * Adds the component `name` with `data` into input_components. This can
+     * create duplicates, so sanitize.
+     */
+    void add_component(std::string_view name,
+                       const ComponentDataStruct::DataVariants &data);
+    /**
+     * Removes the component with a `name` from the input_components table.
+     */
+    void remove_component(std::string_view name);
+
+    /**
+     * Gets all component type names from the input_component_types table.
+     */
+    std::vector<std::string> get_all_component_type_names();
+    /**
+     * Adds the component_type `name` with `data` into input_component_types.
+     * This can create duplicates, so sanitize.
+     */
+    void add_component_type(std::string_view name,
+                            const ComponentDataStruct::HT &data);
+    /**
+     * Removes the component_type with a `name` from the input_component_types
+     * table.
+     */
+    void remove_component_type(std::string_view name);
+
+  public:
+    /**
      * Spawns an empty RBD SQLite Database template at `db_path` which can be
      * filled with an RBD and associated data.
      */

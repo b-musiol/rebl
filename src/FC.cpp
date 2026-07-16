@@ -18,13 +18,9 @@ Machine::Machine(
     KnoKan::DirectedGraph<int, ComponentData, EmptyP> &rbd)
     : component_instance_map(component_instance_map),
       node_properties(rbd.node_properties), begin(true)
-{
-    reset(mcs_settings);
-}
+{ reset(mcs_settings); }
 
-Machine::~Machine()
-{
-}
+Machine::~Machine() {}
 
 std::vector<std::string> Machine::next()
 {

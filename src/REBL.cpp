@@ -19,25 +19,18 @@ RBD::RBD(const std::string_view rbd_db_path,
          bool parse_from_disk)
     : core(std::make_unique<Core>(rbd_db_path, mcs_settings))
 {
-    if (parse_from_disk)
-        core->parse_rbd();
+    if (parse_from_disk) core->parse_rbd();
 }
 
-RBD::~RBD()
-{
-}
+RBD::~RBD() {}
 
 void RBD::change_cached_rbd(std::string_view rbd_json)
-{
-    core->parse_rbd(rbd_json);
-}
+{ core->parse_rbd(rbd_json); }
 
 KnoKan::
     DirectedGraph<int, ComponentData, KnoKan::Property::Predefined::NoWeight>
     RBD::get_pure_graph()
-{
-    return *(core->rbd);
-}
+{ return *(core->rbd); }
 
 std::string RBD::get_graph_adjacency_string(bool with_rel_data,
                                             bool with_component_names)
@@ -52,10 +45,7 @@ std::string RBD::get_graph_adjacency_string(bool with_rel_data,
         {
             auto node_name = core->find_component_name(node);
             out << " (";
-            if (node_name.has_value())
-            {
-                out << *node_name;
-            }
+            if (node_name.has_value()) { out << *node_name; }
             else
             {
                 out << "§virtual§";
@@ -66,10 +56,7 @@ std::string RBD::get_graph_adjacency_string(bool with_rel_data,
         bool first = true;
         for (auto &neighbor : neighbors)
         {
-            if (first)
-            {
-                first = false;
-            }
+            if (first) { first = false; }
             else
             {
                 out << ", ";
@@ -79,10 +66,7 @@ std::string RBD::get_graph_adjacency_string(bool with_rel_data,
             {
                 auto node_name = core->find_component_name(neighbor);
                 out << " (";
-                if (node_name.has_value())
-                {
-                    out << *node_name;
-                }
+                if (node_name.has_value()) { out << *node_name; }
                 else
                 {
                     out << "§virtual§";
@@ -110,19 +94,32 @@ std::string RBD::get_graph_adjacency_string(bool with_rel_data,
     return out.str();
 }
 
-Kochs::Object RBD::run_minimal_cut_sets()
-{
-    return core->run_mcs_and_save();
-}
+Kochs::Object RBD::run_minimal_cut_sets() { return core->run_mcs_and_save(); }
 
 void RBD::spawn_rbd_db_template(std::filesystem::path db_path)
-{
-    RBD::Core::spawn_rbd_db_template(db_path);
-}
+{ RBD::Core::spawn_rbd_db_template(db_path); }
 
 void RBD::merge_output(const std::filesystem::path &output_db_path,
                        const std::vector<std::filesystem::path> &input_db_paths,
                        size_t ix_main_input_db)
-{
-    RBD::Core::merge_output(output_db_path, input_db_paths, ix_main_input_db);
-}
+{ RBD::Core::merge_output(output_db_path, input_db_paths, ix_main_input_db); }
+
+std::vector<std::string> RBD::get_all_component_names()
+{ return core->get_all_component_names(); }
+
+void RBD::add_component(std::string_view name,
+                        const ComponentDataStruct::DataVariants &data)
+{ core->add_component(name, data); }
+
+void RBD::remove_component(std::string_view name)
+{ core->remove_component(name); }
+
+std::vector<std::string> RBD::get_all_component_type_names()
+{ return core->get_all_component_type_names(); }
+
+void RBD::add_component_type(std::string_view name,
+                             const ComponentDataStruct::HT &data)
+{ core->add_component_type(name, data); }
+
+void RBD::remove_component_type(std::string_view name)
+{ core->remove_component_type(name); }

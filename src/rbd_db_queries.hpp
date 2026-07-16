@@ -16,6 +16,32 @@ SELECT
 FROM "output_result_summary";
 )sql";
 
+constexpr const char *select_all_component_names = R"sql(
+SELECT name FROM input_components;
+)sql";
+
+constexpr const char *select_all_component_type_names = R"sql(
+SELECT name FROM input_component_types;;
+)sql";
+
+constexpr const char *insert_into_input_component_types = R"sql(
+INSERT INTO "input_component_types"("name","H","T")
+VALUES (?,?,?);
+)sql";
+
+constexpr const char *insert_into_input_components = R"sql(
+INSERT INTO "input_components"("name","H","T","length","type","ideal")
+VALUES (?,?,?,?,?,?);
+)sql";
+
+constexpr const char *delete_from_input_component_types = R"sql(
+DELETE FROM input_component_types WHERE name = ?;
+)sql";
+
+constexpr const char *delete_from_input_components = R"sql(
+DELETE FROM input_components WHERE name = ?;
+)sql";
+
 constexpr const char *insert_into_output_detail_fc = R"sql(
 INSERT INTO "output_detail_fc"
 (
@@ -25,6 +51,7 @@ INSERT INTO "output_detail_fc"
     "T",
     "component"
 )
+
 VALUES
 (?,?,?,?,?);
 )sql";

@@ -15,17 +15,17 @@
 #include "../include_private/FC.hpp"
 #include "../include_private/RBD_DB.hpp"
 #include "SQLiteDB.hpp"
+#include <algorithm>
 #include <filesystem>
 #include <gtest/gtest.h>
 
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
 
-void expect_rel_near(double actual, double expected, double rel_tol)
+static void expect_rel_near(double actual, double expected, double rel_tol)
 {
     double diff  = std::abs(actual - expected);
     double scale = std::max(std::abs(actual), std::abs(expected));
@@ -34,13 +34,10 @@ void expect_rel_near(double actual, double expected, double rel_tol)
         << "actual=" << actual << " expected=" << expected;
 }
 
-void copy_file(const std::string &fp_src, const std::string &fp_dst)
+static void copy_file(const std::string &fp_src, const std::string &fp_dst)
 {
     std::ifstream src(fp_src, std::ios::binary);
-    if (!src)
-    {
-        throw std::runtime_error("Failed to open source: " + fp_src);
-    }
+    if (!src) { throw std::runtime_error("Failed to open source: " + fp_src); }
 
     std::ofstream dst(fp_dst, std::ios::binary);
     if (!dst)
@@ -121,7 +118,7 @@ TEST(REBL, read_rbd_db)
     EXPECT_FLOAT_EQ(components.at("SCC_n->MGCC").T(), 0.013698);
 }
 
-std::string sort_lines_helper(std::string input)
+static std::string sort_lines_helper(std::string input)
 {
     // This helper function is AI generated. It is not part of the actual
     // codebase.
@@ -129,18 +126,14 @@ std::string sort_lines_helper(std::string input)
     std::vector<std::string> lines;
     std::string line;
 
-    while (std::getline(iss, line))
-    {
-        lines.push_back(line);
-    }
+    while (std::getline(iss, line)) { lines.push_back(line); }
 
-    std::sort(lines.begin(), lines.end());
+    std::ranges::sort(lines);
 
     std::ostringstream oss;
     for (size_t i = 0; i < lines.size(); ++i)
     {
-        if (i != 0)
-            oss << '\n';
+        if (i != 0) oss << '\n';
         oss << lines[i];
     }
 
@@ -219,12 +212,9 @@ TEST(REBL, parse_rbd_db)
               sort_lines_helper(expected_graph_adjacency_string));
 }
 
-void print_vector_of_strings(std::vector<std::string> vec)
+static void print_vector_of_strings(std::vector<std::string> vec)
 {
-    for (auto &str : vec)
-    {
-        std::cout << str << "\n";
-    }
+    for (auto &str : vec) { std::cout << str << "\n"; }
 }
 
 TEST(REBL_FC_Machine, combination_size_min1_max3)
@@ -717,9 +707,9 @@ TEST(REBL_FC_Machine, probability_reset_combination_size)
 
 TEST(REBL_MCS, simplerbd_combinations)
 {
-    double expected_H = 2.511415522436466e-05;
-    double expected_T = 7.264425076603002e-05;
-    double expected_P = 1.824398989895749e-09;
+    double expected_h = 2.511415522436466e-05;
+    double expected_t = 7.264425076603002e-05;
+    double expected_p = 1.824398989895749e-09;
 
     copy_file(std::string(TEST_DATA_DIR) + "/rbd_simple.db",
               std::string(TEST_DATA_DIR) + "/rbd_simple_TEST.db");
@@ -732,16 +722,16 @@ TEST(REBL_MCS, simplerbd_combinations)
     std::cout << "T:" << system_result.T() << " a\n";
     std::cout << "P:" << system_result.P() << " * 100%\n";
     // std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
-    expect_rel_near(system_result.H(), expected_H, 1e-4);
-    expect_rel_near(system_result.T(), expected_T, 1e-4);
-    expect_rel_near(system_result.P(), expected_P, 1e-4);
+    expect_rel_near(system_result.H(), expected_h, 1e-4);
+    expect_rel_near(system_result.T(), expected_t, 1e-4);
+    expect_rel_near(system_result.P(), expected_p, 1e-4);
 }
 
 TEST(REBL_MCS, midsimplerbd_combinations)
 {
-    double expected_H = 0.1002329527430544;
-    double expected_T = 0.000341986399289544;
-    double expected_P = 3.4278306598756196e-05;
+    double expected_h = 0.1002329527430544;
+    double expected_t = 0.000341986399289544;
+    double expected_p = 3.4278306598756196e-05;
 
     copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
               std::string(TEST_DATA_DIR) + "/rbd_mid_simple_TEST.db");
@@ -754,20 +744,20 @@ TEST(REBL_MCS, midsimplerbd_combinations)
     std::cout << "T:" << system_result.T() << " a\n";
     std::cout << "P:" << system_result.P() << " * 100%\n";
     // std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
-    expect_rel_near(system_result.H(), expected_H, 1e-2);
-    expect_rel_near(system_result.T(), expected_T, 1e-2);
-    expect_rel_near(system_result.P(), expected_P, 1e-2);
+    expect_rel_near(system_result.H(), expected_h, 1e-2);
+    expect_rel_near(system_result.T(), expected_t, 1e-2);
+    expect_rel_near(system_result.P(), expected_p, 1e-2);
 }
 
 TEST(REBL_MCS, midsimplerbd_to_rbd_instaswap)
 {
-    double expected_H = 0.23352823800000003;
-    double expected_T = 0.01291904159359092;
-    double expected_P = 0.00301696102;
+    double expected_h = 0.23352823800000003;
+    double expected_t = 0.01291904159359092;
+    double expected_p = 0.00301696102;
 
-    double expected_H2 = 0.034199762;
-    double expected_T2 = 0.02985397910079023;
-    double expected_P2 = 0.00102099898;
+    double expected_h2 = 0.034199762;
+    double expected_t2 = 0.02985397910079023;
+    double expected_p2 = 0.00102099898;
 
     copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple_instaswap.db",
               std::string(TEST_DATA_DIR) + "/rbd_mid_simple_instaswap_TEST.db");
@@ -781,9 +771,9 @@ TEST(REBL_MCS, midsimplerbd_to_rbd_instaswap)
     std::cout << "T:" << system_result.T() << " a\n";
     std::cout << "P:" << system_result.P() << " * 100%\n";
     // std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
-    expect_rel_near(system_result.H(), expected_H, 1e-2);
-    expect_rel_near(system_result.T(), expected_T, 1e-2);
-    expect_rel_near(system_result.P(), expected_P, 1e-2);
+    expect_rel_near(system_result.H(), expected_h, 1e-2);
+    expect_rel_near(system_result.T(), expected_t, 1e-2);
+    expect_rel_near(system_result.P(), expected_p, 1e-2);
 
     std::string new_rbd = R"json(
     [
@@ -798,16 +788,16 @@ TEST(REBL_MCS, midsimplerbd_to_rbd_instaswap)
     std::cout << "T:" << system_result2.T() << " a\n";
     std::cout << "P:" << system_result2.P() << " * 100%\n";
 
-    expect_rel_near(system_result2.H(), expected_H2, 1e-2);
-    expect_rel_near(system_result2.T(), expected_T2, 1e-2);
-    expect_rel_near(system_result2.P(), expected_P2, 1e-2);
+    expect_rel_near(system_result2.H(), expected_h2, 1e-2);
+    expect_rel_near(system_result2.T(), expected_t2, 1e-2);
+    expect_rel_near(system_result2.P(), expected_p2, 1e-2);
 }
 
 TEST(REBL_MCS, midsimplerbd_probability)
 {
-    double expected_H = 0.1002329527430544;
-    double expected_T = 0.000341986399289544;
-    double expected_P = 3.4278306598756196e-05;
+    double expected_h = 0.1002329527430544;
+    double expected_t = 0.000341986399289544;
+    double expected_p = 3.4278306598756196e-05;
 
     copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
               std::string(TEST_DATA_DIR) +
@@ -821,9 +811,9 @@ TEST(REBL_MCS, midsimplerbd_probability)
     std::cout << "T:" << system_result.T() << " a\n";
     std::cout << "P:" << system_result.P() << " * 100%\n";
     // std::cout << "\n" << rebl.get_graph_adjacency_string(true, true) << "\n";
-    expect_rel_near(system_result.H(), expected_H, 1e-2);
-    expect_rel_near(system_result.T(), expected_T, 1e-2);
-    expect_rel_near(system_result.P(), expected_P, 1e-2);
+    expect_rel_near(system_result.H(), expected_h, 1e-2);
+    expect_rel_near(system_result.T(), expected_t, 1e-2);
+    expect_rel_near(system_result.P(), expected_p, 1e-2);
 }
 
 TEST(REBL_RBD, template_dump)
@@ -860,11 +850,11 @@ TEST(REBL_merge, merge)
             3);
     }
 
-    // {
-    //     REBL::RBD rbd(std::string(TEST_DATA_DIR) + "/rbd_merge_main_TEST.db",
-    //                   REBL::MCSSettings(true, 0, 0, 1e-8, 1.0),
-    //                   true);
-    // }
+    {
+        REBL::RBD rbd(std::string(TEST_DATA_DIR) + "/rbd_merge_main_TEST.db",
+                      REBL::MCSSettings(true, 0, 0, 1e-8, 1.0),
+                      true);
+    }
     {
         SQLiteDB::Database db(std::string(TEST_DATA_DIR) +
                                   "/rbd_merged_TEST.db",
@@ -879,6 +869,60 @@ TEST(REBL_merge, merge)
             "SELECT COUNT(*) FROM output_result_fc;");
         EXPECT_EQ(84, tb_result_fc_size.data.at(0).get_integer(0));
     }
+}
+
+TEST(REBL, add_component)
+{
+
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
+              std::string(TEST_DATA_DIR) + "/rbd_add_component_TEST.db");
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_add_component_TEST.db",
+                   REBL::MCSSettings(true, 0, 0, 1e-8, 1.0),
+                   false);
+
+    rebl.add_component_type("testtype", {.H = 0.123, .T = 2.3});
+
+    REBL::ComponentDataStruct::DataVariants ht =
+        REBL::ComponentDataStruct::HT{.H = 0.02, .T = 0.03};
+    REBL::ComponentDataStruct::DataVariants htl =
+        REBL::ComponentDataStruct::HTLength{.H      = 0.12,
+                                            .T      = 0.13,
+                                            .length = 2.2};
+    REBL::ComponentDataStruct::DataVariants ideal =
+        REBL::ComponentDataStruct::Ideal();
+    REBL::ComponentDataStruct::DataVariants type_name = std::string("testtype");
+    rebl.add_component("test_ht", ht);
+    rebl.add_component("test_htl", htl);
+    rebl.add_component("test_ideal", ideal);
+    rebl.add_component("test_typename", type_name);
+}
+
+TEST(REBL, remove_component)
+{
+
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
+              std::string(TEST_DATA_DIR) + "/rbd_remove_component_TEST.db");
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) + "/rbd_remove_component_TEST.db",
+                   REBL::MCSSettings(true, 0, 0, 1e-8, 1.0),
+                   false);
+
+    rebl.add_component_type("testtype", {.H = 0.123, .T = 2.3});
+
+    REBL::ComponentDataStruct::DataVariants ht =
+        REBL::ComponentDataStruct::HT{.H = 0.02, .T = 0.03};
+    REBL::ComponentDataStruct::DataVariants htl =
+        REBL::ComponentDataStruct::HTLength{.H      = 0.12,
+                                            .T      = 0.13,
+                                            .length = 2.2};
+    REBL::ComponentDataStruct::DataVariants ideal =
+        REBL::ComponentDataStruct::Ideal();
+    REBL::ComponentDataStruct::DataVariants type_name = std::string("testtype");
+    rebl.add_component("test_ht", ht);
+    rebl.add_component("test_htl", htl);
+    rebl.add_component("test_ideal", ideal);
+    rebl.add_component("test_typename", type_name);
+    rebl.remove_component("test_typename");
+    rebl.remove_component_type("testtype");
 }
 
 TEST(SCV, random_rbd)
@@ -935,12 +979,12 @@ TEST(SCV, random_rbd_dump_to_disk)
         R"result(["A","B","C",["D","E"],["F","G",["H"],["I"],null,"J"],null])result");
     auto file_path = std::string(TEST_DATA_DIR) + "/scv_dump.json";
     scv.save_to_file(file_path);
-    std::ifstream jF;
-    jF.open(file_path);
-    std::string jBuf;
-    jF >> jBuf;
+    std::ifstream j_f;
+    j_f.open(file_path);
+    std::string j_buf;
+    j_f >> j_buf;
     EXPECT_EQ(
-        jBuf,
+        j_buf,
         R"result(["A","B","C",["D","E"],["F","G",["H"],["I"],null,"J"],null])result");
 }
 

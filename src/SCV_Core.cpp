@@ -14,46 +14,33 @@
 #include "../include_private/SCV_Core.hpp"
 
 #include <fstream>
-#include <iostream>
+// #include <iostream>
 using namespace REBL;
 
-SCV::Core::Core()
-{
-}
+SCV::Core::Core() = default;
 
-SCV::Core::~Core()
-{
-}
+SCV::Core::~Core() = default;
 
 nlohmann::json *SCV::Core::get_cursor()
 {
     nlohmann::json *cursor = &m_json_buffer;
-    for (auto ix : m_ix_stack)
-    {
-        cursor = &((*cursor)[ix]);
-    }
+    for (auto ix : m_ix_stack) { cursor = &((*cursor)[ix]); }
     return cursor;
 }
 
-std::string SCV::Core::get_json_string()
-{
-    return m_json_buffer.dump();
-}
+std::string SCV::Core::get_json_string() { return m_json_buffer.dump(); }
 
 void SCV::Core::save_to_file(std::string json_path)
 {
-    std::ofstream jF;
-    jF.open(json_path.c_str());
+    std::ofstream j_f;
+    j_f.open(json_path.c_str());
 
-    jF << get_json_string();
+    j_f << get_json_string();
 
-    jF.close();
+    j_f.close();
 }
 
-void SCV::Core::init()
-{
-    m_json_buffer.clear();
-}
+void SCV::Core::init() { m_json_buffer.clear(); }
 
 void SCV::Core::place(const std::string_view block_name)
 {
