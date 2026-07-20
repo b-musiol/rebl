@@ -991,7 +991,7 @@ TEST(SCV, random_rbd_dump_to_disk)
     EXPECT_EQ(
         jsn,
         R"result(["A","B","C",["D","E"],["F","G",["H"],["I"],null,"J"],null])result");
-    auto file_path = std::string(TEST_DATA_DIR) + "/scv_dump.json";
+    auto file_path = std::string(TEST_DATA_DIR) + "/scv_dump_TEST.json";
     scv.save_to_file(file_path);
     std::ifstream j_f;
     j_f.open(file_path);

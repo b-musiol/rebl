@@ -70,4 +70,5 @@ vcpkg_installed/
 # test output & cache
 Testing/
 *_TEST.db
+*_TEST.json
 .cache/
