@@ -185,6 +185,7 @@ For Windows:
 - Download MinGW64 (https://www.mingw-w64.org/) (Tested with MSYS2)
 - Open MinGW64 UCRT shell (or adjust the environment variables to point to the appropriate binaries)
 - clone repository
+Note: Compiling with clang++ has also worked
 
 For MacOS:
 - Install Homebrew (https://brew.sh/)
