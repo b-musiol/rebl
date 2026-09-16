@@ -600,3 +600,6 @@ void RBD::Core::change_t_factor(double t_factor)
 
 void RBD::Core::change_length_factor(double length_factor)
 { rbd_db.change_length_factor(length_factor); }
+
+void RBD::Core::change_saved_rbd(std::string_view rbd_json)
+{ rbd_db.change_saved_rbd(rbd_json); }

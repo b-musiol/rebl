@@ -68,6 +68,11 @@ class RBD
      */
     void change_cached_rbd(std::string_view rbd_json);
     /**
+     * Changes the RBD for the passed `rbd_json` inside the actual database.
+     * This does not re-parse, unless `parse_again` is set to `true`.
+     */
+    void change_saved_rbd(std::string_view rbd_json, bool parse_again = false);
+    /**
      * Runs the Minimal Cut Sets algorithm on the RBD and saves the results
      */
     Kochs::Object run_minimal_cut_sets();

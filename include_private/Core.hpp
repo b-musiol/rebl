@@ -97,6 +97,7 @@ struct REBL::RBD::Core
     void change_h_factor(double h_factor);
     void change_t_factor(double t_factor);
     void change_length_factor(double length_factor);
+    void change_saved_rbd(std::string_view rbd_json);
 
   private:
     unsigned int get_next_run_id();

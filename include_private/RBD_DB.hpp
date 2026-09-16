@@ -116,6 +116,7 @@ class Connection : public Litesaver::Base
     void change_h_factor(double h_factor);
     void change_t_factor(double t_factor);
     void change_length_factor(double length_factor);
+    void change_saved_rbd(std::string_view rbd_json);
 
   public:
     static void spawn_rbd_db_template(std::filesystem::path db_path);

@@ -139,6 +139,12 @@ SET "valFloat" = ?
 WHERE "key" = ?;
 )sql";
 
+constexpr const char *update_input_rbd_text = R"sql(
+UPDATE "input_rbd"
+SET "valText" = ?
+WHERE "key" = ?;
+)sql";
+
 } // namespace Query
 } // namespace DB
 } // namespace REBL

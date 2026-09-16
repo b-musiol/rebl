@@ -937,6 +937,7 @@ TEST(REBL, factors_update)
     rebl.change_h_factor(47.11);
     rebl.change_t_factor(0.815);
     rebl.change_length_factor(19.48);
+    rebl.change_saved_rbd("[]", false);
 }
 
 TEST(SCV, random_rbd)

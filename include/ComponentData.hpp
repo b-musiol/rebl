@@ -12,8 +12,8 @@
 
 #include <Kochs.hpp>
 #include <misc/Property.hpp>
-#include <variant>
 #include <string>
+#include <variant>
 
 using EmptyP = KnoKan::Property::Predefined::NoWeight;
 

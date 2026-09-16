@@ -629,3 +629,10 @@ void DB::Connection::change_length_factor(double length_factor)
     params.push_text("length_factor");
     direct_write_access(DB::Query::update_input_rbd_real, params);
 }
+void DB::Connection::change_saved_rbd(std::string_view rbd_json)
+{
+    SQLiteDB::Row params;
+    params.push_text(rbd_json);
+    params.push_text("rbd");
+    direct_write_access(DB::Query::update_input_rbd_text, params);
+}

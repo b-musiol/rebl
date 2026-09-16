@@ -27,6 +27,12 @@ RBD::~RBD() = default;
 void RBD::change_cached_rbd(std::string_view rbd_json)
 { core->parse_rbd(rbd_json); }
 
+void RBD::change_saved_rbd(std::string_view rbd_json, bool parse_again)
+{
+    core->change_saved_rbd(rbd_json);
+    if (parse_again) core->parse_rbd();
+}
+
 KnoKan::
     DirectedGraph<int, ComponentData, KnoKan::Property::Predefined::NoWeight>
     RBD::get_pure_graph()
