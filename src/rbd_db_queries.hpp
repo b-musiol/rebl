@@ -10,6 +10,13 @@ namespace DB
 namespace Query
 {
 
+constexpr const char *select_factors = R"sql(
+SELECT
+    "key", "valFloat"
+FROM "input_rbd"
+WHERE "key" IN ('H_factor', 'T_factor', 'length_factor');
+)sql";
+
 constexpr const char *select_largest_run_id = R"sql(
 SELECT
     MAX("run_id")

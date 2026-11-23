@@ -136,3 +136,6 @@ void RBD::change_t_factor(double t_factor) { core->change_t_factor(t_factor); }
 
 void RBD::change_length_factor(double length_factor)
 { core->change_length_factor(length_factor); }
+
+Data::Table::DetailFC RBD::get_output_detail_fc()
+{ return core->get_output_detail_fc(); }

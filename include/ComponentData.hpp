@@ -24,13 +24,9 @@ namespace ComponentDataStruct
 {
 
 struct HT
-{
-    double H, T;
-};
+{ double H, T; };
 struct HTLength
-{
-    double H, T, length;
-};
+{ double H, T, length; };
 typedef std::monostate Ideal;
 typedef std::string TypeName;
 

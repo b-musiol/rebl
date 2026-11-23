@@ -616,3 +616,27 @@ void RBD::Core::change_length_factor(double length_factor)
 
 void RBD::Core::change_saved_rbd(std::string_view rbd_json)
 { rbd_db.change_saved_rbd(rbd_json); }
+
+Data::Table::DetailFC RBD::Core::get_output_detail_fc()
+{
+    Data::Table::DetailFC data;
+
+    auto h_factor = rbd_db.get_h_factor();
+    auto t_factor = rbd_db.get_t_factor();
+
+    auto raw_data = rbd_db.get_output_detail_fc_runid_offset(0);
+
+    for (auto &row : raw_data)
+    {
+        // Grab from row
+        auto fc_id     = row.get_integer(0);
+        auto run_id    = row.get_integer(1);
+        auto h         = row.get_real(2) * h_factor;
+        auto t         = row.get_real(3) * t_factor;
+        auto component = row.get_text(4);
+        // Put into output
+        data[run_id][fc_id][component] = Kochs::Object(h, t);
+    }
+
+    return data;
+}

@@ -940,6 +940,19 @@ TEST(REBL, factors_update)
     rebl.change_saved_rbd("[]", false);
 }
 
+TEST(REBL, get_output_detail_fc)
+{
+
+    copy_file(std::string(TEST_DATA_DIR) + "/rbd_mid_simple.db",
+              std::string(TEST_DATA_DIR) + "/rbd_get_output_detail_fc_TEST.db");
+    REBL::RBD rebl(std::string(TEST_DATA_DIR) +
+                       "/rbd_get_output_detail_fc_TEST.db",
+                   REBL::MCSSettings(false, 1, 2, 0.0, 0.0));
+    rebl.run_minimal_cut_sets();
+
+    REBL::Data::Table::DetailFC output_detail_fc = rebl.get_output_detail_fc();
+}
+
 TEST(SCV, random_rbd)
 {
     std::string jsn;

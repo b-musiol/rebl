@@ -636,3 +636,12 @@ void DB::Connection::change_saved_rbd(std::string_view rbd_json)
     params.push_text("rbd");
     direct_write_access(DB::Query::update_input_rbd_text, params);
 }
+
+double DB::Connection::get_h_factor()
+{ return std::get<double>(get_input_unique("rbd", "H_factor")); }
+
+double DB::Connection::get_t_factor()
+{ return std::get<double>(get_input_unique("rbd", "T_factor")); }
+
+double DB::Connection::get_length_factor()
+{ return std::get<double>(get_input_unique("rbd", "length_factor")); }

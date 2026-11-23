@@ -36,6 +36,18 @@ class Connection : public Litesaver::Base
 
   public:
     /**
+     * Gets H factor from the database.
+     */
+    double get_h_factor();
+    /**
+     * Gets T factor from the database.
+     */
+    double get_t_factor();
+    /**
+     * Gets length factor from the database.
+     */
+    double get_length_factor();
+    /**
      * Gets the rbd JSON from the database.
      */
     nlohmann::json get_rbd();

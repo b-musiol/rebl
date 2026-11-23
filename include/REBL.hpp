@@ -14,12 +14,38 @@
 #include "Kochs.hpp"
 #include "MCSSettings.hpp"
 #include "graphs/DirectedGraph.hpp"
+#include <cstddef>
 #include <filesystem>
 #include <memory>
+#include <string>
 #include <string_view>
+#include <unordered_map>
+#include <vector>
 
 namespace REBL
 {
+
+namespace Data
+{
+namespace Row
+{
+/**
+ * Maps a component in `output_detail_fc` to its reliability data.
+ */
+typedef std::unordered_map<std::string, Kochs::Object> DetailFC;
+} // namespace Row
+
+namespace Table
+{
+/**
+ * Maps a `run_id` to a `fc_id` and then to its rows of contents in
+ * `output_detail_fc`
+ */
+typedef std::unordered_map<size_t, std::unordered_map<size_t, Row::DetailFC>>
+    DetailFC;
+} // namespace Table
+
+} // namespace Data
 
 class RBD
 {
@@ -130,6 +156,12 @@ class RBD
         const std::filesystem::path &output_db_path,
         const std::vector<std::filesystem::path> &input_db_paths,
         size_t ix_main_input_db = 0);
+
+  public:
+    /**
+     * Gets all contents from `output_detail_fc`.
+     */
+    Data::Table::DetailFC get_output_detail_fc();
 
   private:
     /// PIMPL

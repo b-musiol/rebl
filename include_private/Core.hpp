@@ -99,6 +99,12 @@ struct REBL::RBD::Core
     void change_length_factor(double length_factor);
     void change_saved_rbd(std::string_view rbd_json);
 
+  public:
+    /**
+     * Gets all contents from `output_detail_fc`.
+     */
+    Data::Table::DetailFC get_output_detail_fc();
+
   private:
     unsigned int get_next_run_id();
     SQLiteDB::Row make_params_insert_result_summary_row(
