@@ -14,8 +14,8 @@
 #include <map>
 
 #include "../include/ComponentData.hpp"
+#include "../include/FC.hpp"
 #include "../include/REBL.hpp"
-#include "FC.hpp"
 #include "RBD_DB.hpp"
 #include "graphs/DirectedGraph.hpp"
 #include <Kochs.hpp>

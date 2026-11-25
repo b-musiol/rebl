@@ -7,7 +7,7 @@
  * See LICENSE
  */
 
-#include "../include_private/FC.hpp"
+#include "../include/FC.hpp"
 #include "Kochs.hpp"
 
 using namespace REBL::FailureCombination;
