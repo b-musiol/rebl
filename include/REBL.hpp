@@ -134,6 +134,10 @@ class RBD
      * table.
      */
     void remove_component_type(std::string_view name);
+    /**
+     * Gets the rbd components as a map of explicit reliability data.
+     */
+    std::unordered_map<std::string, Kochs::Object> get_rbd_components();
 
   public:
     void change_h_factor(double h_factor);

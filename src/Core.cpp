@@ -640,3 +640,6 @@ Data::Table::DetailFC RBD::Core::get_output_detail_fc()
 
     return data;
 }
+
+std::unordered_map<std::string, Kochs::Object> RBD::Core::get_rbd_components()
+{ return rbd_db.get_rbd_components(); }

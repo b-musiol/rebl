@@ -139,3 +139,5 @@ void RBD::change_length_factor(double length_factor)
 
 Data::Table::DetailFC RBD::get_output_detail_fc()
 { return core->get_output_detail_fc(); }
+std::unordered_map<std::string, Kochs::Object> RBD::get_rbd_components()
+{ return core->get_rbd_components(); }

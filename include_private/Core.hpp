@@ -98,6 +98,7 @@ struct REBL::RBD::Core
     void change_t_factor(double t_factor);
     void change_length_factor(double length_factor);
     void change_saved_rbd(std::string_view rbd_json);
+    std::unordered_map<std::string, Kochs::Object> get_rbd_components();
 
   public:
     /**
