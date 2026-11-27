@@ -11,9 +11,9 @@
 #define _REBL_TEST_HPP
 
 #include "../include/FC.hpp"
+#include "../include/RBD_DB.hpp"
 #include "../include/REBL.hpp"
 #include "../include/SCV.hpp"
-#include "../include_private/RBD_DB.hpp"
 #include "SQLiteDB.hpp"
 #include <algorithm>
 #include <filesystem>

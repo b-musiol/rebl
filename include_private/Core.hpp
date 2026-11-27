@@ -15,8 +15,8 @@
 
 #include "../include/ComponentData.hpp"
 #include "../include/FC.hpp"
+#include "../include/RBD_DB.hpp"
 #include "../include/REBL.hpp"
-#include "RBD_DB.hpp"
 #include "graphs/DirectedGraph.hpp"
 #include <Kochs.hpp>
 #include <Litesaver.hpp>

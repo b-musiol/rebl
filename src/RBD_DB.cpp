@@ -7,7 +7,7 @@
  * See LICENSE
  */
 
-#include "../include_private/RBD_DB.hpp"
+#include "../include/RBD_DB.hpp"
 #include "Kochs.hpp"
 #include "SQLiteDB.hpp"
 #include "rbd_db_queries.hpp"
